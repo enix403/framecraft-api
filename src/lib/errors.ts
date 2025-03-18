@@ -1,4 +1,5 @@
-import { Response } from 'express';
+import { Response } from "express";
+import { ValidationErrorItem } from "joi";
 
 export class ApplicationError extends Error {
   public readonly userMessage: string;
@@ -9,7 +10,7 @@ export class ApplicationError extends Error {
     super(msg);
     this.userMessage = msg;
     this.statusCode = statusCode || 400;
-    this.errorCode = errorCode || 'unset';
+    this.errorCode = errorCode || "unset";
   }
 
   public sendResponse(res: Response) {
@@ -17,12 +18,27 @@ export class ApplicationError extends Error {
       isApiReplyError: true,
       errorMessage: this.userMessage,
       errorCode: this.errorCode,
+      ...this.getExtraData(),
     });
+  }
+
+  protected getExtraData(): object {
+    return {};
   }
 }
 
 export class NotFound extends ApplicationError {
   constructor() {
-    super('Resource not found', 404, 'not_found');
+    super("Resource not found", 404, "not_found");
+  }
+}
+
+export class JoiValidationError extends ApplicationError {
+  constructor(public readonly details: ValidationErrorItem[]) {
+    super("Invalid input", 400, "val_err");
+  }
+
+  protected getExtraData(): object {
+    return { details: this.details };
   }
 }

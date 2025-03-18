@@ -10,6 +10,8 @@ import { appEnv } from "lib/app-env";
 
 import { comparePassword, hashPassword } from "./hashing";
 import { reply } from "lib/app-reply";
+import { bodySchema } from "middleware/validation";
+import Joi, { string } from "joi";
 
 export const router = express.Router();
 
@@ -28,6 +30,12 @@ function createToken(user: any) {
 
 router.post(
   "/auth/login",
+  bodySchema(
+    Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    }),
+  ),
   ah(async (req, res) => {
     const { email, password } = req.body;
 
