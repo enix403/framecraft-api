@@ -1,0 +1,78 @@
+@baseUrl = http://localhost:3001
+
+###
+# -------------------------
+# @name QueryHealth
+GET {{baseUrl}}/health
+Authorization: Bearer {{accessToken}}
+
+###
+# -------------------------
+# @name CmdTemp
+POST {{baseUrl}}/temp
+
+# ==================================
+# ==================================
+# ==================================
+# ==================================
+# ==================================
+
+###
+# -------------------------
+# @name CmdRegister
+POST {{baseUrl}}/auth/register
+
+{
+  "email": "user2@gmail.com",
+  "password": "pass",
+  "fullName": "User 2"
+}
+
+###
+# -------------------------
+# @name CmdLogin
+POST {{baseUrl}}/auth/login
+
+{
+  "email": "user1@gmail.com",
+  "password": "pass"
+}
+
+###
+@accessToken = {{CmdLogin.response.body.$.token}}
+
+# ==================================
+# ==================================
+# ==================================
+# ==================================
+# ==================================
+
+# ###
+# # -------------------------
+# GET {{baseUrl}}/chat/conversations
+# Authorization: Bearer {{accessToken}}
+
+# ###
+# # -------------------------
+# POST {{baseUrl}}/chat/resume-conv-single
+# Authorization: Bearer {{accessToken}}
+
+# {
+#   "receiverId": "675586fdcbfc42693c7971c1"
+# }
+
+
+# ###
+# # -------------------------
+# # @name CmdUploadImage
+# POST {{baseUrl}}/upload/image2
+# Authorization: Bearer {{accessToken}}
+# Content-Type: multipart/form-data; boundary=MfnBoundry
+
+# --MfnBoundry
+# Content-Disposition: form-data; name="image"; filename="test-image.jpg"
+# Content-Type: image/jpeg
+
+# < ./test-image.jpg
+# --MfnBoundry--
+

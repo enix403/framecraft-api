@@ -12,6 +12,7 @@ import { comparePassword, hashPassword } from "./hashing";
 import { reply } from "@/lib/app-reply";
 import { bodySchema } from "@/middleware/validation";
 import Joi from "joi";
+import { StatusCodes } from "http-status-codes";
 
 export const router = express.Router();
 
@@ -56,11 +57,24 @@ router.post(
 
 router.post(
   "/auth/register",
+  bodySchema(
+    Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+      fullName: Joi.string().required()
+    })
+  ),
   ah(async (req, res) => {
     const { email, password, ...restData } = req.body;
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) throw new ApplicationError("Email already registered");
+
+    if (existingUser)
+      throw new ApplicationError(
+        "Email already registered",
+        StatusCodes.CONFLICT,
+        "email_taken"
+      );
 
     const passwordHash = await hashPassword(password);
 
