@@ -3,7 +3,6 @@ import { blackBright } from "colorette";
 
 const logFormat = format.combine(
   format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-  format.errors({ stack: true }),
   format.printf(
     (info) =>
       blackBright(`[${info.timestamp}]`) + //

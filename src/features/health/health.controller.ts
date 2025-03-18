@@ -13,3 +13,14 @@ router.get(
     });
   }),
 );
+
+router.get(
+  '/temp',
+  ah(async (req, res) => {
+    throw new Error("Failed to see you");
+    return reply(res, {
+      live: true,
+      query: req.query
+    });
+  }),
+);

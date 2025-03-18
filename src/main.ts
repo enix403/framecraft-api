@@ -15,6 +15,8 @@ import {
   magentaBright,
   greenBright,
   blackBright,
+  blue,
+  white,
 } from "colorette";
 
 import { appEnv } from "lib/app-env";
@@ -66,6 +68,26 @@ async function connectMongoDB() {
   }
 }
 
+function methodColors(method: string) {
+  method = method.toUpperCase();
+  switch (method) {
+    case "GET":
+      return blue;
+    case "POST":
+    case "PATCH":
+      return magenta;
+    case "DELETE":
+      return red;
+    default:
+      return white;
+  }
+}
+
+morgan.token("method", function (req, res) {
+  const method = req.method || "";
+  return methodColors(method)(method);
+});
+
 function createApp() {
   const app = express();
 
@@ -80,7 +102,7 @@ function createApp() {
 
   app.use(
     morgan(
-      `${magentaBright(":method")} :url -> ${cyan(":status")} ${blackBright("(:remote-addr)")}`,
+      `:method :url -> ${cyan(":status")} ${blackBright("(:remote-addr)")}`,
       {
         stream: {
           write: (message) => appLogger.http(message.trim()),
@@ -104,9 +126,8 @@ function createApp() {
       }
 
       if (err) {
-        appLogger.error(`500 - Server Error - ${err.message}`);
+        // appLogger.error(`500 - Server Error - ${err.message}`);
         res.status(500).json({ message: "An internal server error occurred" });
-
         throw err;
       }
       next();
