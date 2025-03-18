@@ -11,13 +11,11 @@ import {
   bold,
   yellowBright,
   magenta,
-  blueBright,
-  magentaBright,
-  greenBright,
   blackBright,
   blue,
   white,
 } from "colorette";
+import PrettyError from "pretty-error";
 
 import { appEnv } from "lib/app-env";
 import { ApplicationError } from "lib/errors";
@@ -113,6 +111,8 @@ function createApp() {
 
   app.use(createRootApiRouter());
 
+  var pe = new PrettyError();
+
   // Global error handling middleware
   app.use(
     (
@@ -126,11 +126,11 @@ function createApp() {
       }
 
       if (err) {
-        // appLogger.error(`500 - Server Error - ${err.message}`);
         res.status(500).json({ message: "An internal server error occurred" });
-        throw err;
+        console.log(pe.render(err));
+      } else {
+        next();
       }
-      next();
     },
   );
 
