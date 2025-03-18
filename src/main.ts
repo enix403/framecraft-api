@@ -111,7 +111,7 @@ function createApp() {
 
   app.use(createRootApiRouter());
 
-  var pe = new PrettyError();
+  const pe = new PrettyError();
 
   // Global error handling middleware
   app.use(
@@ -127,7 +127,7 @@ function createApp() {
 
       if (err) {
         res.status(500).json({ message: "An internal server error occurred" });
-        console.log(pe.render(err));
+        appLogger.error(pe.render(err));
       } else {
         next();
       }
