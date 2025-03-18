@@ -52,9 +52,9 @@ export function getBind(): ServerBind {
 
 async function connectMongoDB() {
   try {
-    appLogger.info("Connecting to MongoDB ...");
+    appLogger.verbose("Connecting to MongoDB ...");
     await mongoose.connect(appEnv.MONGO_URL ?? "");
-    appLogger.info(green("Connected successfully to MongoDB instance"));
+    appLogger.verbose(green("Connected successfully to MongoDB instance"));
   } catch (error) {
     appLogger.error(red("Connection to MongoDB instance failed"));
     throw error;
@@ -141,10 +141,10 @@ async function bootstrap() {
         ? green(`http://localhost:${listenAt}`)
         : `named pipe ${green(listenAt)}`;
 
-    appLogger.info(cyan(`Listening on ${listeningOn}`));
+    appLogger.verbose(cyan(`Listening on ${listeningOn}`));
 
     const nodeEnv = magenta(appEnv.NODE_ENV);
-    appLogger.info(`env: ${nodeEnv} 🚀`);
+    appLogger.verbose(`env: ${nodeEnv} 🚀`);
   });
 }
 
