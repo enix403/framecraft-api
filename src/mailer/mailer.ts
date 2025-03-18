@@ -17,7 +17,7 @@ const mailer = new Email({
   views: {
     root: "/home/radium/ser/follows/allapi/src/mailer/templates",
     locals: {
-      clientUrl: appEnv.CLIENT_URL,
+      clientUrl: appEnv.CLIENT_URL
     },
     options: { extension: "ejs" }
   },
@@ -27,13 +27,12 @@ const mailer = new Email({
 });
 
 export const mailPresets = {
-  welcome(email: string) {
+  welcome: (email: string) =>
     mailer.send({
       template: "welcome",
       message: {
-        from: '<no-reply@example.com>',
+        from: "<no-reply@example.com>",
         to: email
       }
     })
-  }
 };
