@@ -1,0 +1,151 @@
+import http from "http";
+
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import {
+  cyan,
+  green,
+  red,
+  yellow,
+  bold,
+  yellowBright,
+  magenta,
+} from "colorette";
+
+import { appEnv } from "lib/app-env";
+import { ApplicationError } from "lib/errors";
+import { appLogger } from "lib/logger";
+import { createRootApiRouter } from "features/routes";
+
+export type ServerBind =
+  | { type: "port"; port: number }
+  | { type: "pipe"; pipe: string };
+
+export function getBind(): ServerBind {
+  const val = appEnv.PORT;
+
+  if (!val) {
+    const DEF_PORT = 3001;
+    appLogger.warn(
+      yellowBright(
+        `Env variable ${bold("PORT")} not defined. Defaulting to port ${bold(DEF_PORT)}`,
+      ),
+    );
+    return { type: "port", port: DEF_PORT };
+  }
+
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return { type: "pipe", pipe: val };
+  }
+
+  if (port >= 0) {
+    // port number
+    return { type: "port", port };
+  }
+
+  throw new Error(`Invalid value for env variable \`PORT\`: ${val}`);
+}
+
+async function connectMongoDB() {
+  try {
+    appLogger.info("Connecting to MongoDB ...");
+    await mongoose.connect(appEnv.MONGO_URL ?? "");
+    appLogger.info(green("Connected successfully to MongoDB instance"));
+  } catch (error) {
+    appLogger.error(red("Connection to MongoDB instance failed"));
+    throw error;
+  }
+}
+
+function createApp() {
+  const app = express();
+
+  app.disable("etag");
+  app.get("/*", function (req, res, next) {
+    res.setHeader("Last-Modified", new Date().toUTCString());
+    next();
+  });
+
+  app.use(cors());
+  app.use(express.json());
+
+  app.use(createRootApiRouter());
+
+  // Global error handling middleware
+  app.use(
+    (
+      err: Error,
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction,
+    ) => {
+      if (err instanceof ApplicationError) {
+        return err.sendResponse(res);
+      }
+
+      if (err) {
+        appLogger.error(`500 - Server Error - ${err.message}`);
+        res.status(500).json({ message: "An internal server error occurred" });
+
+        throw err;
+      }
+      next();
+    },
+  );
+
+  return app;
+}
+
+async function bootstrap() {
+  // await connectMongoDB();
+
+  const app = createApp();
+  const server = http.createServer(app);
+
+  const bind = getBind();
+
+  const listenAt = bind.type === "port" ? bind.port : bind.pipe;
+  server.listen(listenAt);
+
+  server.on("error", (error: { syscall: string; code: string }) => {
+    if (error.syscall !== "listen") {
+      throw new Error();
+    }
+
+    let bindStr =
+      bind.type === "pipe" ? `Pipe ${listenAt}` : `Port ${listenAt}`;
+
+    bindStr = yellow(bindStr);
+
+    switch (error.code) {
+      case "EACCES":
+        appLogger.error(red(`${bindStr} requires elevated privileges`));
+        process.exit(1);
+        break;
+      case "EADDRINUSE":
+        appLogger.error(red(`${bindStr} is already in use`));
+        process.exit(1);
+        break;
+      default:
+        throw new Error("An error occured " + JSON.stringify(error));
+    }
+  });
+
+  server.on("listening", () => {
+    const listeningOn =
+      bind.type === "port"
+        ? green(`http://localhost:${listenAt}`)
+        : `named pipe ${green(listenAt)}`;
+
+    appLogger.info(cyan(`Listening on ${listeningOn}`));
+
+    const nodeEnv = magenta(appEnv.NODE_ENV);
+    appLogger.info(`env: ${nodeEnv} 🚀`);
+  });
+}
+
+bootstrap();
