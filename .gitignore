@@ -12,6 +12,8 @@ uploads/*
 node_modules/
 .yarn/
 
+mongo-data/
+
 .env
 
 # Build

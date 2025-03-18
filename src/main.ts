@@ -141,7 +141,7 @@ function createApp() {
 }
 
 async function bootstrap() {
-  // await connectMongoDB();
+  await connectMongoDB();
 
   const app = createApp();
   const server = http.createServer(app);
