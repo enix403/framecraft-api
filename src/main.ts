@@ -11,12 +11,17 @@ import {
   bold,
   yellowBright,
   magenta,
+  blueBright,
+  magentaBright,
+  greenBright,
+  blackBright,
 } from "colorette";
 
 import { appEnv } from "lib/app-env";
 import { ApplicationError } from "lib/errors";
 import { appLogger } from "lib/logger";
 import { createRootApiRouter } from "features/routes";
+import morgan from "morgan";
 
 export type ServerBind =
   | { type: "port"; port: number }
@@ -72,6 +77,17 @@ function createApp() {
 
   app.use(cors());
   app.use(express.json());
+
+  app.use(
+    morgan(
+      `${magentaBright(":method")} :url -> ${cyan(":status")} ${blackBright("(:remote-addr)")}`,
+      {
+        stream: {
+          write: (message) => appLogger.http(message.trim()),
+        },
+      },
+    ),
+  );
 
   app.use(createRootApiRouter());
 
