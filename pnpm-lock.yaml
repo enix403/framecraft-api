@@ -20,9 +20,6 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
-      ejs:
-        specifier: ^3.1.10
-        version: 3.1.10
       email-templates:
         specifier: ^12.0.2
         version: 12.0.2(ejs@3.1.10)(mustache@4.2.0)(pug@3.0.3)(underscore@1.13.7)
@@ -56,6 +53,9 @@ importers:
       preview-email:
         specifier: ^3.1.0
         version: 3.1.0
+      pug:
+        specifier: ^3.0.3
+        version: 3.0.3
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -2577,6 +2577,7 @@ snapshots:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
+    optional: true
 
   character-parser@2.2.0:
     dependencies:
@@ -2820,6 +2821,7 @@ snapshots:
   ejs@3.1.10:
     dependencies:
       jake: 10.9.2
+    optional: true
 
   email-templates@12.0.2(ejs@3.1.10)(mustache@4.2.0)(pug@3.0.3)(underscore@1.13.7):
     dependencies:
@@ -2987,6 +2989,7 @@ snapshots:
   filelist@1.0.4:
     dependencies:
       minimatch: 5.1.6
+    optional: true
 
   fill-range@7.1.1:
     dependencies:
@@ -3244,6 +3247,7 @@ snapshots:
       chalk: 4.1.2
       filelist: 1.0.4
       minimatch: 3.1.2
+    optional: true
 
   joi@17.13.3:
     dependencies:
@@ -3422,6 +3426,7 @@ snapshots:
   minimatch@5.1.6:
     dependencies:
       brace-expansion: 2.0.1
+    optional: true
 
   minimist@1.2.8: {}
 

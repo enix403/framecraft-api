@@ -1,6 +1,7 @@
 import { appEnv } from "@/lib/app-env";
 import nodemailer from "nodemailer";
 import Email from "email-templates";
+import { appLogger } from "@/lib/logger";
 
 const transport = nodemailer.createTransport({
   port: appEnv.MAIL_PORT,
@@ -18,8 +19,7 @@ const mailer = new Email({
     root: "/home/radium/ser/follows/allapi/src/mailer/templates",
     locals: {
       clientUrl: appEnv.CLIENT_URL
-    },
-    options: { extension: "ejs" }
+    }
   },
   preview: false,
   send: true,
@@ -34,5 +34,7 @@ export const mailPresets = {
         from: "<no-reply@example.com>",
         to: email
       }
+    }).then(() => {
+      appLogger.info(`Mail "welcome" sent to "${email}"`)
     })
 };
