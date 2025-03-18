@@ -18,7 +18,7 @@ import {
 import PrettyError from "pretty-error";
 
 import { appEnv } from "lib/app-env";
-import { ApplicationError } from "lib/errors";
+import { ApplicationError, NotFound } from "lib/errors";
 import { appLogger } from "lib/logger";
 import { createRootApiRouter } from "features/routes";
 import morgan from "morgan";
@@ -34,7 +34,7 @@ export function getBind(): ServerBind {
     const DEF_PORT = 3001;
     appLogger.warn(
       yellowBright(
-        `Env variable ${bold("PORT")} not defined. Defaulting to port ${bold(DEF_PORT)}`,
+        `Env ${bold("PORT")} not defined. Defaulting to ${bold(DEF_PORT)}`,
       ),
     );
     return { type: "port", port: DEF_PORT };
@@ -110,6 +110,9 @@ function createApp() {
   );
 
   app.use(createRootApiRouter());
+  app.all("*", () => {
+    throw new NotFound();
+  });
 
   const pe = new PrettyError();
 
