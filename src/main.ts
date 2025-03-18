@@ -13,7 +13,7 @@ import {
   magenta,
   blackBright,
   blue,
-  white,
+  white
 } from "colorette";
 import PrettyError from "pretty-error";
 
@@ -35,8 +35,8 @@ export function getBind(): ServerBind {
     const DEF_PORT = 3001;
     appLogger.warn(
       yellowBright(
-        `Env ${bold("PORT")} not defined. Defaulting to ${bold(DEF_PORT)}`,
-      ),
+        `Env ${bold("PORT")} not defined. Defaulting to ${bold(DEF_PORT)}`
+      )
     );
     return { type: "port", port: DEF_PORT };
   }
@@ -104,10 +104,10 @@ function createApp() {
       `:method :url -> ${cyan(":status")} ${blackBright("(:remote-addr)")}`,
       {
         stream: {
-          write: (message) => appLogger.http(message.trim()),
-        },
-      },
-    ),
+          write: message => appLogger.http(message.trim())
+        }
+      }
+    )
   );
 
   app.use(createRootApiRouter());
@@ -123,7 +123,7 @@ function createApp() {
       err: Error,
       req: express.Request,
       res: express.Response,
-      next: express.NextFunction,
+      next: express.NextFunction
     ) => {
       if (err instanceof ApplicationError) {
         return err.sendResponse(res);
@@ -137,7 +137,7 @@ function createApp() {
       } else {
         next();
       }
-    },
+    }
   );
 
   return app;

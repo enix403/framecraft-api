@@ -12,7 +12,7 @@ import { StatusCodes } from "http-status-codes";
 
 const applyAuthToken = async (
   req: Request,
-  res: Response,
+  res: Response
 ): Promise<IUser | null> => {
   const token = req.header("Authorization")?.split(" ")[1];
 
@@ -31,7 +31,7 @@ const applyAuthToken = async (
       jwt.verify(token, appEnv.JWT_SIGNING_KEY ?? "", (err, decoded) => {
         if (err !== null) reject(err);
         else resolve(decoded as AccessTokenClaims);
-      }),
+      })
     );
   } catch (err) {}
 
@@ -42,7 +42,7 @@ const applyAuthToken = async (
 
   if (user === null) {
     appLogger.warn(
-      `Unauthenticated access attempt: Invalid session token - ${token}`,
+      `Unauthenticated access attempt: Invalid session token - ${token}`
     );
 
     res
@@ -73,7 +73,7 @@ export function protect(allowedRoles?: string[]) {
         appLogger.warn(
           `Unauthorized access attempt: Invalid role - ${userRole} not allowed in [` +
             allowedRoles.join(", ") +
-            "]",
+            "]"
         );
 
         res.status(StatusCodes.FORBIDDEN).json({ message: "Not allowed" });

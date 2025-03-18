@@ -20,7 +20,7 @@ export class ApplicationError extends Error {
       isApiReplyError: true,
       errorMessage: this.userMessage,
       errorCode: this.errorCode,
-      ...this.getExtraData(),
+      ...this.getExtraData()
     });
   }
 

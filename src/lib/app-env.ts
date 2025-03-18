@@ -52,7 +52,7 @@ export const appEnv = {
   NODE_ENV: getEnv("NODE_ENV", "production"), // Default to 'production' if not set
   PORT: getEnv("PORT"), // Default to '3000' if not set
   MONGO_URL: getEnv("MONGO_URL"), // No default, will return `null` if not set
-  JWT_SIGNING_KEY: getEnv("JWT_SIGNING_KEY"), // No default, will return `null` if not set
+  JWT_SIGNING_KEY: getEnv("JWT_SIGNING_KEY") // No default, will return `null` if not set
 };
 
 // Environment checks

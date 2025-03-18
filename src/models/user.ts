@@ -1,11 +1,11 @@
-import { model, Document, Schema, Types } from 'mongoose';
+import { model, Document, Schema, Types } from "mongoose";
 
 /* ===================== */
 
 export interface IUser extends Document<Types.ObjectId> {
   email: string;
   passwordHash: string;
-  role: 'admin' | 'user';
+  role: "admin" | "user";
   fullName: string;
   isActive: boolean;
 }
@@ -16,12 +16,12 @@ const userSchema = new Schema<IUser>(
     passwordHash: { type: String, required: true },
     role: {
       type: String,
-      enum: ['admin', 'user'],
-      required: true,
+      enum: ["admin", "user"],
+      required: true
     },
 
     fullName: { type: String, required: true },
-    isActive: { type: Boolean, default: true },
+    isActive: { type: Boolean, default: true }
   },
   {
     toObject: { virtuals: true },
@@ -31,9 +31,9 @@ const userSchema = new Schema<IUser>(
         // Remove passwordHash from any JSON response
         delete ret.passwordHash;
         return ret;
-      },
-    },
-  },
+      }
+    }
+  }
 );
 
-export const User = model('User', userSchema);
+export const User = model("User", userSchema);

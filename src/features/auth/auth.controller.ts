@@ -23,8 +23,8 @@ function createToken(user: any) {
       (err: any, token: string) => {
         if (err) reject(err);
         else resolve(token);
-      },
-    ),
+      }
+    )
   );
 }
 
@@ -33,8 +33,8 @@ router.post(
   bodySchema(
     Joi.object({
       email: Joi.string().email().required(),
-      password: Joi.string().required(),
-    }),
+      password: Joi.string().required()
+    })
   ),
   ah(async (req, res) => {
     const { email, password } = req.body;
@@ -51,7 +51,7 @@ router.post(
     let token = await createToken(user);
 
     return reply(res, { token, user });
-  }),
+  })
 );
 
 router.post(
@@ -68,12 +68,12 @@ router.post(
       ...restData,
       email,
       passwordHash,
-      role: "user",
+      role: "user"
     });
 
     user = await user.save();
     const token = await createToken(user);
 
     return reply(res, { token, user });
-  }),
+  })
 );

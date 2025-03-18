@@ -14,7 +14,7 @@ export function reply(res: Response, data?: any): void {
 function replyWithMessage(res: Response, message: string, data?: any) {
   return reply(res, {
     message,
-    ...(data || {}),
+    ...(data || {})
   });
 }
 

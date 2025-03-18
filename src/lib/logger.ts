@@ -4,10 +4,10 @@ import { blackBright } from "colorette";
 const logFormat = format.combine(
   format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
   format.printf(
-    (info) =>
+    info =>
       blackBright(`[${info.timestamp}]`) + //
-      ` (${info.level}): ${info.message}`,
-  ),
+      ` (${info.level}): ${info.message}`
+  )
 );
 
 export const appLogger = createLogger({
@@ -16,13 +16,13 @@ export const appLogger = createLogger({
   transports: [
     new transports.Console({
       level: "verbose",
-      format: format.combine(format.colorize(), logFormat),
+      format: format.combine(format.colorize(), logFormat)
     }),
     new transports.File({
-      level: 'info',
+      level: "info",
       format: format.combine(logFormat, format.uncolorize()),
-      filename: 'logs/combined.log'
+      filename: "logs/combined.log"
     })
   ],
-  exitOnError: false,
+  exitOnError: false
 });

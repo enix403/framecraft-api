@@ -9,9 +9,9 @@ router.get(
   ah(async (req, res) => {
     return reply(res, {
       live: true,
-      query: req.query,
+      query: req.query
     });
-  }),
+  })
 );
 
 router.get(
@@ -20,7 +20,7 @@ router.get(
     throw new Error("Failed to see you");
     return reply(res, {
       live: true,
-      query: req.query,
+      query: req.query
     });
-  }),
+  })
 );
