@@ -22,6 +22,7 @@ import { ApplicationError, NotFound } from "lib/errors";
 import { appLogger } from "lib/logger";
 import { createRootApiRouter } from "features/routes";
 import morgan from "morgan";
+import { StatusCodes } from "http-status-codes";
 
 export type ServerBind =
   | { type: "port"; port: number }
@@ -129,7 +130,9 @@ function createApp() {
       }
 
       if (err) {
-        res.status(500).json({ message: "An internal server error occurred" });
+        res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: "An internal server error occurred" });
         appLogger.error(pe.render(err));
       } else {
         next();

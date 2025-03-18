@@ -1,6 +1,8 @@
 import { Response } from "express";
 import { ValidationErrorItem } from "joi";
 
+import { StatusCodes } from "http-status-codes";
+
 export class ApplicationError extends Error {
   public readonly userMessage: string;
   public readonly statusCode: number;
@@ -9,7 +11,7 @@ export class ApplicationError extends Error {
   constructor(msg: string, statusCode?: number, errorCode?: string) {
     super(msg);
     this.userMessage = msg;
-    this.statusCode = statusCode || 400;
+    this.statusCode = statusCode || StatusCodes.BAD_REQUEST;
     this.errorCode = errorCode || "unset";
   }
 
@@ -29,13 +31,13 @@ export class ApplicationError extends Error {
 
 export class NotFound extends ApplicationError {
   constructor() {
-    super("Resource not found", 404, "not_found");
+    super("Resource not found", StatusCodes.NOT_FOUND, "not_found");
   }
 }
 
 export class JoiValidationError extends ApplicationError {
   constructor(public readonly details: ValidationErrorItem[]) {
-    super("Invalid input", 400, "val_err");
+    super("Invalid input", StatusCodes.BAD_REQUEST, "val_err");
   }
 
   protected getExtraData(): object {

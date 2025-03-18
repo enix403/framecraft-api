@@ -8,6 +8,7 @@ import type { AccessTokenClaims } from "./AccessTokenClaims";
 import { appLogger } from "lib/logger";
 
 import { IUser, User } from "models/user";
+import { StatusCodes } from "http-status-codes";
 
 const applyAuthToken = async (
   req: Request,
@@ -16,7 +17,9 @@ const applyAuthToken = async (
   const token = req.header("Authorization")?.split(" ")[1];
 
   if (!token) {
-    res.status(401).json({ message: "No token provided." });
+    res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ message: "No token provided." });
     appLogger.warn(`Unauthenticated access attempt: No token provided`);
     return null;
   }
@@ -42,7 +45,9 @@ const applyAuthToken = async (
       `Unauthenticated access attempt: Invalid session token - ${token}`,
     );
 
-    res.status(401).json({ message: "Invalid session token." });
+    res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ message: "Invalid session token." });
 
     return null;
   }
@@ -53,7 +58,7 @@ const applyAuthToken = async (
   return req.user ?? null;
 };
 
-export function requireAuthenticated(allowedRoles?: string[]) {
+export function protect(allowedRoles?: string[]) {
   return handleAsync(async (req, res, next) => {
     const loggedInUser = await applyAuthToken(req, res);
 
@@ -71,7 +76,7 @@ export function requireAuthenticated(allowedRoles?: string[]) {
             "]",
         );
 
-        res.status(403).json({ message: "Not allowed" });
+        res.status(StatusCodes.FORBIDDEN).json({ message: "Not allowed" });
         return;
       }
     }
