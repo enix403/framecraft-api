@@ -3,11 +3,11 @@ import { type Request, type Response } from "express";
 import { Types } from "mongoose";
 import handleAsync from "express-async-handler";
 
-import { appEnv } from "lib/app-env";
+import { appEnv } from "@/lib/app-env";
 import type { AccessTokenClaims } from "./AccessTokenClaims";
-import { appLogger } from "lib/logger";
+import { appLogger } from "@/lib/logger";
 
-import { IUser, User } from "models/user";
+import { IUser, User } from "@/models/user";
 import { StatusCodes } from "http-status-codes";
 
 const applyAuthToken = async (

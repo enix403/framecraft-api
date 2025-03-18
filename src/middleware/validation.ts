@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 import Joi from "joi";
 import { ValidationError } from "joi";
-import { JoiValidationError } from "lib/errors";
+import { JoiValidationError } from "@/lib/errors";
 
 export const customJoi = {
   id: () => Joi.string().hex().length(24).required(),

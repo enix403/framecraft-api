@@ -20,10 +20,13 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "sourceMap": true,
     "baseUrl": "./src",
     "rootDir": "./src",
     "outDir": "./build",
-    "sourceMap": true
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": [
     "src"

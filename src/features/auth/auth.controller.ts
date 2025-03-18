@@ -1,17 +1,17 @@
 import express from "express";
 import ah from "express-async-handler";
-import { ApplicationError } from "lib/errors";
+import { ApplicationError } from "@/lib/errors";
 
 import { AccessTokenClaims } from "./AccessTokenClaims";
-import { User } from "models/user";
+import { User } from "@/models/user";
 
 import jwt from "jsonwebtoken";
-import { appEnv } from "lib/app-env";
+import { appEnv } from "@/lib/app-env";
 
 import { comparePassword, hashPassword } from "./hashing";
-import { reply } from "lib/app-reply";
-import { bodySchema } from "middleware/validation";
-import Joi, { string } from "joi";
+import { reply } from "@/lib/app-reply";
+import { bodySchema } from "@/middleware/validation";
+import Joi from "joi";
 
 export const router = express.Router();
 
