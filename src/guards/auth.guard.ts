@@ -4,7 +4,7 @@ import { Types } from "mongoose";
 import handleAsync from "express-async-handler";
 
 import { appEnv } from "@/lib/app-env";
-import type { AccessTokenClaims } from "./AccessTokenClaims";
+import type { AccessTokenClaims } from "@/contracts/AccessTokenClaims";
 import { appLogger } from "@/lib/logger";
 
 import { IUser, User } from "@/models/user";
@@ -58,7 +58,7 @@ const applyAuthToken = async (
   return req.user ?? null;
 };
 
-export function protect(allowedRoles?: string[]) {
+export function authGuard(allowedRoles?: string[]) {
   return handleAsync(async (req, res, next) => {
     const loggedInUser = await applyAuthToken(req, res);
 

@@ -2,7 +2,7 @@ import express from "express";
 import ah from "express-async-handler";
 import { ApplicationError } from "@/lib/errors";
 
-import { AccessTokenClaims } from "./AccessTokenClaims";
+import { AccessTokenClaims } from "@/contracts/AccessTokenClaims";
 import { User } from "@/models/user";
 
 import jwt from "jsonwebtoken";
