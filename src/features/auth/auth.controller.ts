@@ -48,7 +48,11 @@ router.add(
       user == null ||
       !(await comparePassword(password, user.passwordHash || ""))
     ) {
-      throw new ApplicationError("Invalid email or password", 401);
+      throw new ApplicationError(
+        "Invalid email or password",
+        StatusCodes.UNAUTHORIZED,
+        "invalid_creds"
+      );
     }
 
     let accessToken = await tokenService.genAccess(user);

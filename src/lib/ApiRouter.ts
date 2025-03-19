@@ -4,10 +4,8 @@ import {
   Request,
   Response
 } from "express";
-import { StatusCodes } from "http-status-codes";
 import { ObjectSchema } from "joi";
-import joiToSwagger from "joi-to-swagger";
-import swaggerJsdoc from "swagger-jsdoc";
+import catchAsync from 'express-async-handler';
 
 import { bodySchema, paramSchema, querySchema } from "@/middleware/validation";
 
@@ -72,7 +70,7 @@ export class ApiRouter {
     (this.expressRouter as any)[method.toLowerCase()](
       fullPath,
       [...middlewares, ...valMiddlewares],
-      handler
+      catchAsync(handler)
     );
 
     if (!route.tags) {

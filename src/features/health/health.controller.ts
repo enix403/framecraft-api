@@ -15,16 +15,7 @@ export const router = new ApiRouter({
 router.add(
   {
     path: "/health",
-    method: "GET",
-    schema: {
-      query: Joi.object({
-        username: customJoi.id(),
-        password: Joi.string()
-      }),
-      body: Joi.object({
-        username: customJoi.id()
-      })
-    }
+    method: "GET"
   },
   async (req, res) => {
     return reply(res, {
@@ -37,7 +28,7 @@ router.add(
 router.add(
   {
     path: "/temp",
-    method: "GET"
+    method: "POST"
   },
   async (req, res) => {
     await User.deleteMany({});
