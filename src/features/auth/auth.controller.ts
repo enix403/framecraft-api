@@ -1,3 +1,5 @@
+import crypto from "node:crypto";
+
 import express from "express";
 import ah from "express-async-handler";
 import { ApplicationError } from "@/lib/errors";
@@ -14,7 +16,7 @@ import { StatusCodes } from "http-status-codes";
 
 import { User } from "@/models/user";
 import { Verification } from "@/models/verification";
-import { startSession } from "mongoose";
+import { mailPresets } from "@/mailer/mailer";
 
 export const router = express.Router();
 
@@ -95,8 +97,8 @@ router.post(
 );
  */
 
-function createCryptoString() {
-  return `dkawjdldwjalw${Math.random() * 1000}`;
+function createVerificationToken() {
+  return crypto.randomBytes(48).toString("hex");
 }
 
 export const createDateAddDaysFromNow = (days: number) => {
@@ -119,8 +121,6 @@ router.post(
   ah(async (req, res) => {
     const { email, password, ...restData } = req.body;
 
-    // const session = await startSession();
-    // try {
     const isUserExist = await User.exists({ email });
 
     if (isUserExist) {
@@ -131,7 +131,6 @@ router.post(
       );
     }
 
-    // session.startTransaction();
     const passwordHash = await hashPassword(password);
 
     const user = await new User({
@@ -139,43 +138,20 @@ router.post(
       email,
       passwordHash,
       role: "user"
-    });
-    // .save({ session });
+    }).save();
 
-    const cryptoString = createCryptoString();
+    const token = createVerificationToken();
     const dateFromNow = createDateAddDaysFromNow(2); // expires in 2 days
 
     await new Verification({
       userId: user.id,
       email,
-      token: cryptoString,
+      token: token,
       expiresIn: dateFromNow
-    });
-    // .save({ session });
+    }).save();
 
-    /*
-      const userMail = new UserMail();
-
-      userMail.signUp({
-        email: user.email
-      });
-
-      userMail.verification({
-        email: user.email,
-        accessToken: cryptoString
-      }); */
-
-    // await session.commitTransaction();
-    // session.endSession();
+    mailPresets.verification(email, token);
 
     return reply(res);
-    // } catch (error) {
-    //   if (session.inTransaction()) {
-    //     await session.abortTransaction();
-    //     session.endSession();
-    //   }
-
-    //   throw error;
-    // }
   })
 );

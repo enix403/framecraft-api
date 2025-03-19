@@ -20,22 +20,26 @@ const mailer = new Email({
     root: path.join(__dirname, "templates"),
     locals: {
       clientUrl: appEnv.CLIENT_URL
-    }
+    },
+    options: { extension: "ejs" }
   },
   preview: false,
   send: true,
-  transport: transport
+  transport: transport,
+  message: {
+    from: "<no-reply@example.com>"
+  }
 });
 
 export const mailPresets = {
-  welcome: (email: string) =>
-    mailer.send({
-      template: "welcome",
-      message: {
-        from: "<no-reply@example.com>",
-        to: email
-      }
-    }).then(() => {
-      appLogger.info(`Mail "welcome" sent to "${email}"`)
-    })
+  verification: (email: string, token: string) =>
+    mailer
+      .send({
+        template: "verification",
+        message: { to: email },
+        locals: { token }
+      })
+      .then(() => {
+        appLogger.info(`Mail "verification" sent to "${email}"`);
+      })
 };

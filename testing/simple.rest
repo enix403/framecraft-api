@@ -23,9 +23,9 @@ POST {{baseUrl}}/temp
 POST {{baseUrl}}/auth/sign-up
 
 {
-  "email": "user3@gmail.com",
+  "email": "user5@gmail.com",
   "password": "pass",
-  "fullName": "User 3"
+  "fullName": "User 4"
 }
 
 ###
