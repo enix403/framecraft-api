@@ -1,5 +1,5 @@
-import { createLogger, format, transports, config } from "winston";
 import { blackBright } from "colorette";
+import { config, createLogger, format, transports } from "winston";
 
 const logFormat = format.combine(
   format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),

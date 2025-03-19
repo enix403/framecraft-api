@@ -1,8 +1,8 @@
-import { model, Document, Schema, Types } from "mongoose";
+import { Document, Schema, Types, model } from "mongoose";
 
 export enum DisposableTokenKind {
-  Verify = 'Verify',
-  ResetPassword = 'ResetPassword',
+  Verify = "Verify",
+  ResetPassword = "ResetPassword"
 }
 
 export interface IDisposableToken extends Document<Types.ObjectId> {

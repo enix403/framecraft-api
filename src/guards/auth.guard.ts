@@ -1,14 +1,15 @@
-import jwt from "jsonwebtoken";
 import { type Request, type Response } from "express";
-import { Types } from "mongoose";
 import handleAsync from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import jwt from "jsonwebtoken";
+import { Types } from "mongoose";
 
 import { appEnv } from "@/lib/app-env";
-import type { AccessTokenClaims } from "@/contracts/AccessTokenClaims";
 import { appLogger } from "@/lib/logger";
 
+import type { AccessTokenClaims } from "@/contracts/AccessTokenClaims";
+
 import { IUser, User } from "@/models/user";
-import { StatusCodes } from "http-status-codes";
 
 const applyAuthToken = async (
   req: Request,

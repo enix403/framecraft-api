@@ -1,5 +1,3 @@
-import dotenv from "dotenv";
-import { appLogger } from "./logger";
 import {
   bgCyanBright,
   blueBright,
@@ -13,6 +11,9 @@ import {
   white,
   yellow
 } from "colorette";
+import dotenv from "dotenv";
+
+import { appLogger } from "./logger";
 
 dotenv.config();
 

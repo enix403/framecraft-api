@@ -1,7 +1,6 @@
 import { Response } from "express";
-import { ValidationErrorItem } from "joi";
-
 import { StatusCodes } from "http-status-codes";
+import { ValidationErrorItem } from "joi";
 
 export class ApplicationError extends Error {
   public readonly userMessage: string;

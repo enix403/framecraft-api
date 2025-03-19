@@ -8,5 +8,22 @@
   "singleQuote": false,
   "tabWidth": 2,
   "trailingComma": "none",
-  "useTabs": false
+  "useTabs": false,
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "^node:",
+    "^(?!@/|[.])",
+    "^@/lib/",
+    "^@/contracts/",
+    "^@/guards/",
+    "^@/middleware/",
+    "^@/models/",
+    "^@/mailer/",
+    "^@/features/",
+    "^@/",
+    "^[.][.]/",
+    "^[.]/"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }

@@ -1,7 +1,9 @@
 import path from "node:path";
-import { appEnv } from "@/lib/app-env";
-import nodemailer from "nodemailer";
+
 import Email from "email-templates";
+import nodemailer from "nodemailer";
+
+import { appEnv } from "@/lib/app-env";
 import { appLogger } from "@/lib/logger";
 
 const transport = nodemailer.createTransport({

@@ -1,28 +1,28 @@
-import http from "http";
-
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
 import {
-  cyan,
-  green,
-  red,
-  yellow,
-  bold,
-  yellowBright,
-  magenta,
   blackBright,
   blue,
-  white
+  bold,
+  cyan,
+  green,
+  magenta,
+  red,
+  white,
+  yellow,
+  yellowBright
 } from "colorette";
+import cors from "cors";
+import express from "express";
+import http from "http";
+import { StatusCodes } from "http-status-codes";
+import mongoose from "mongoose";
+import morgan from "morgan";
 import PrettyError from "pretty-error";
 
 import { appEnv } from "@/lib/app-env";
 import { ApplicationError, NotFound } from "@/lib/errors";
 import { appLogger } from "@/lib/logger";
+
 import { createRootApiRouter } from "@/features/routes";
-import morgan from "morgan";
-import { StatusCodes } from "http-status-codes";
 
 export type ServerBind =
   | { type: "port"; port: number }

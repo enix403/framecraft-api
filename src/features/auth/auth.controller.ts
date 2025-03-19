@@ -1,17 +1,19 @@
 import express from "express";
 import ah from "express-async-handler";
+import { StatusCodes } from "http-status-codes";
+import Joi from "joi";
+
+import { reply } from "@/lib/app-reply";
 import { ApplicationError, NotFound } from "@/lib/errors";
 
-import { comparePassword, hashPassword } from "./hashing";
-import { reply } from "@/lib/app-reply";
 import { bodySchema } from "@/middleware/validation";
-import Joi from "joi";
-import { StatusCodes } from "http-status-codes";
-
-import { User } from "@/models/user";
-import { mailPresets } from "@/mailer/mailer";
 
 import { DisposableTokenKind } from "@/models/disposable-token";
+import { User } from "@/models/user";
+
+import { mailPresets } from "@/mailer/mailer";
+
+import { comparePassword, hashPassword } from "./hashing";
 import { tokenService } from "./token.service";
 
 export const router = express.Router();

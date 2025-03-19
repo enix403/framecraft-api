@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-
+import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 import { ValidationError } from "joi";
+
 import { JoiValidationError } from "@/lib/errors";
 
 export const customJoi = {
