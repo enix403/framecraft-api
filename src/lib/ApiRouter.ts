@@ -8,15 +8,12 @@ import { StatusCodes } from "http-status-codes";
 import Joi, { ObjectSchema } from "joi";
 import joiToSwagger from "joi-to-swagger";
 import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
 
 // Type for schema definitions
 type RouteInputSchema = ObjectSchema;
-type InferSchemaType<T extends RouteInputSchema> =
-  T extends ObjectSchema<infer U> ? U : never;
 
 // Route metadata
-type RouteInfo = {
+export type RouteInfo = {
   path: string;
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   summary?: string;
@@ -31,7 +28,7 @@ type RouteInfo = {
 };
 
 // Wrapper class for Express Router
-class ApiRouter {
+export class ApiRouter {
   private readonly expressRouter: ExpressRouter;
   private readonly routes: RouteInfo[] = [];
   private readonly childRouters: { path?: string; router: ApiRouter }[] = [];
@@ -190,14 +187,4 @@ class ApiRouter {
       apis: []
     });
   }
-
-  public serveDocs(router: ExpressRouter) {
-    router.use(
-      "/docs",
-      swaggerUi.serve,
-      swaggerUi.setup(this.getSwaggerSpec())
-    );
-  }
 }
-
-export default ApiRouter;

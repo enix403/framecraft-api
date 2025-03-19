@@ -24,7 +24,7 @@ import { appLogger } from "@/lib/logger";
 
 import { createRootApiRouter } from "@/features/routes";
 
-import ApiRouter from "./lib/ApiRouter";
+import { buildSwaggerSpec, swaggerDocs } from "./swagger";
 
 export type ServerBind =
   | { type: "port"; port: number }
@@ -114,7 +114,9 @@ function createApp() {
 
   const apiRouter = createRootApiRouter();
   app.use(apiRouter.getExpressRouter());
-  apiRouter.serveDocs(app);
+
+  const spec = buildSwaggerSpec(apiRouter);
+  app.use("/docs", swaggerDocs(spec));
 
   app.all("*", () => {
     throw new NotFound();

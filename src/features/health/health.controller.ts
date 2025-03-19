@@ -1,10 +1,12 @@
-import ApiRouter from "@/lib/ApiRouter";
+import Joi from "joi";
+
+import { ApiRouter } from "@/lib/ApiRouter";
 import { reply } from "@/lib/app-reply";
+
 import { customJoi } from "@/middleware/validation";
 
 import { DisposableToken } from "@/models/disposable-token";
 import { User } from "@/models/user";
-import Joi from "joi";
 
 export const router = new ApiRouter();
 
