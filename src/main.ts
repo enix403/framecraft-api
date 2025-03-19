@@ -24,6 +24,8 @@ import { appLogger } from "@/lib/logger";
 
 import { createRootApiRouter } from "@/features/routes";
 
+import ApiRouter from "./lib/ApiRouter";
+
 export type ServerBind =
   | { type: "port"; port: number }
   | { type: "pipe"; pipe: string };
@@ -110,7 +112,12 @@ function createApp() {
     )
   );
 
-  app.use(createRootApiRouter());
+  const rootRouter = new ApiRouter();
+  rootRouter.addRouter("/api", createRootApiRouter());
+  app.use(rootRouter.getRouter());
+  // Serve Swagger Docs
+  rootRouter.serveDocs(app);
+
   app.all("*", () => {
     throw new NotFound();
   });

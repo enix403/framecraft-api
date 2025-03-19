@@ -1,13 +1,13 @@
-import express from "express";
+import ApiRouter from "@/lib/ApiRouter";
 
-import { router as authRouter } from "./auth/auth.controller";
+// import { router as authRouter } from "./auth/auth.controller";
 import { router as healthRouter } from "./health/health.controller";
 
 export function createRootApiRouter() {
-  const router = express.Router();
+  const router = new ApiRouter();
 
-  router.use(healthRouter);
-  router.use(authRouter);
+  router.addRouter(healthRouter);
+  // router.addRouter(authRouter);
 
   return router;
 }
