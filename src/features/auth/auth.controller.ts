@@ -1,12 +1,11 @@
-import express from "express";
-import ah from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import Joi from "joi";
 
+import { ApiRouter } from "@/lib/ApiRouter";
 import { reply } from "@/lib/app-reply";
 import { ApplicationError, NotFound } from "@/lib/errors";
 
-import { bodySchema, customJoi } from "@/middleware/validation";
+import { customJoi } from "@/middleware/validation";
 
 import { DisposableTokenKind } from "@/models/disposable-token";
 import { User } from "@/models/user";
@@ -16,17 +15,20 @@ import { mailPresets } from "@/mailer/mailer";
 import { comparePassword, hashPassword } from "./hashing";
 import { tokenService } from "./token.service";
 
-export const router = express.Router();
+export const router = new ApiRouter();
 
-router.post(
-  "/auth/login",
-  bodySchema(
-    Joi.object({
-      email: Joi.string().email().required(),
-      password: Joi.string().required()
-    })
-  ),
-  ah(async (req, res) => {
+router.add(
+  {
+    path: "/auth/login",
+    method: "POST",
+    schema: {
+      body: Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().required()
+      })
+    }
+  },
+  async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({
@@ -48,19 +50,22 @@ router.post(
       accessToken,
       user
     });
-  })
+  }
 );
 
-router.post(
-  "/auth/sign-up",
-  bodySchema(
-    Joi.object({
-      email: Joi.string().email().required(),
-      password: Joi.string().required(),
-      fullName: Joi.string().required()
-    })
-  ),
-  ah(async (req, res) => {
+router.add(
+  {
+    path: "/auth/sign-up",
+    method: "POST",
+    schema: {
+      body: Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().required(),
+        fullName: Joi.string().required()
+      })
+    }
+  },
+  async (req, res) => {
     const { email, password, ...restData } = req.body;
 
     const isUserExist = await User.exists({ email });
@@ -91,18 +96,21 @@ router.post(
     mailPresets.verification(email, tokenRecord.token, user.id);
 
     return reply(res);
-  })
+  }
 );
 
-router.post(
-  "/auth/verify",
-  bodySchema(
-    Joi.object({
-      userId: customJoi.id().required(),
-      token: Joi.string().required()
-    })
-  ),
-  ah(async (req, res) => {
+router.add(
+  {
+    path: "/auth/verify",
+    method: "POST",
+    schema: {
+      body: Joi.object({
+        userId: customJoi.id().required(),
+        token: Joi.string().required()
+      })
+    }
+  },
+  async (req, res) => {
     const { userId, token } = req.body;
 
     let record = await tokenService.consumeDisposable(
@@ -130,19 +138,22 @@ router.post(
       accessToken,
       user
     });
-  })
+  }
 );
 
 /* ====================== */
 
-router.post(
-  "/auth/forget-password/init",
-  bodySchema(
-    Joi.object({
-      email: Joi.string().email().required()
-    })
-  ),
-  ah(async (req, res) => {
+router.add(
+  {
+    path: "/auth/forget-password/init",
+    method: "POST",
+    schema: {
+      body: Joi.object({
+        email: Joi.string().email().required()
+      })
+    }
+  },
+  async (req, res) => {
     const { email } = req.body;
 
     const user = await User.findOne({ email });
@@ -158,19 +169,22 @@ router.post(
     }
 
     return reply(res);
-  })
+  }
 );
 
-router.post(
-  "/auth/forget-password/set",
-  bodySchema(
-    Joi.object({
-      userId: customJoi.id().required(),
-      token: Joi.string().required(),
-      newPassword: Joi.string().required()
-    })
-  ),
-  ah(async (req, res) => {
+router.add(
+  {
+    path: "/auth/forget-password/set",
+    method: "POST",
+    schema: {
+      body: Joi.object({
+        userId: customJoi.id().required(),
+        token: Joi.string().required(),
+        newPassword: Joi.string().required()
+      })
+    }
+  },
+  async (req, res) => {
     const { userId, token, newPassword } = req.body;
 
     let record = await tokenService.consumeDisposable(
@@ -195,5 +209,5 @@ router.post(
     }
 
     return reply(res);
-  })
+  }
 );
