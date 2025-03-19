@@ -19,7 +19,7 @@ POST {{baseUrl}}/temp
 POST {{baseUrl}}/auth/sign-up
 
 {
-  "email": "user51@gmail.com",
+  "email": "user1@gmail.com",
   "password": "pass",
   "fullName": "Halo"
 }
@@ -30,8 +30,8 @@ POST {{baseUrl}}/auth/sign-up
 POST {{baseUrl}}/auth/verify
 
 {
-  "userId": "67da8598625c22786e43c0a1",
-  "token": "cb0db12622c4092dce9fa157b4fb6aab"
+  "userId": "67da8b071cceea11fbbb093c",
+  "token": "d1a4d6d5eed63cf5f388bbbe3463abd8"
 }
 
 ###
@@ -40,9 +40,12 @@ POST {{baseUrl}}/auth/verify
 POST {{baseUrl}}/auth/login
 
 {
-  "email": "user51@gmail.com",
+  "email": "user1@gmail.com",
   "password": "pass2"
 }
+
+###
+@accessToken = {{CmdLogin.response.body.$.accessToken}}
 
 ###
 # -------------------------
@@ -50,7 +53,7 @@ POST {{baseUrl}}/auth/login
 POST {{baseUrl}}/auth/forget-password/init
 
 {
-  "email": "user51@gmail.com"
+  "email": "user1@gmail.com"
 }
 
 ###
@@ -59,13 +62,9 @@ POST {{baseUrl}}/auth/forget-password/init
 POST {{baseUrl}}/auth/forget-password/set
 
 {
-  "userId": "67da8598625c22786e43c0a1",
-  "token": "7c5b2330b627ca0aac56e19ca827fc76",
+  "userId": "67da8b071cceea11fbbb093c",
+  "token": "15f38e16de4b5f4c8c36dd7488e0e4fc",
   "newPassword": "pass2"
 }
-
-
-###
-@accessToken = {{CmdLogin.response.body.$.accessToken}}
 
 

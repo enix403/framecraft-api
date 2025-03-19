@@ -2,6 +2,8 @@ import express from "express";
 import ah from "express-async-handler";
 import { reply } from "@/lib/app-reply";
 import { mailPresets } from "@/mailer/mailer";
+import { User } from "@/models/user";
+import { DisposableToken } from "@/models/disposable-token";
 
 export const router = express.Router();
 
@@ -18,7 +20,8 @@ router.get(
 router.get(
   "/temp",
   ah(async (req, res) => {
-    mailPresets.welcome("hello@gmail.com");
+    await User.deleteMany({});
+    await DisposableToken.deleteMany({});
 
     return reply(res, { ok: true });
   })

@@ -1,5 +1,3 @@
-import crypto from "node:crypto";
-
 import express from "express";
 import ah from "express-async-handler";
 import { ApplicationError, NotFound } from "@/lib/errors";
@@ -21,6 +19,8 @@ import {
   DisposableToken,
   DisposableTokenKind
 } from "@/models/disposable-token";
+import { createDateAddDaysFromNow } from "@/lib/dates";
+import { tokenService } from "./token.service";
 
 export const router = express.Router();
 
@@ -70,18 +70,6 @@ router.post(
   })
 );
 
-function createRandomToken() {
-  return crypto.randomBytes(16).toString("hex");
-}
-
-export const createDateAddDaysFromNow = (days: number) => {
-  const date = new Date();
-
-  date.setDate(date.getDate() + days);
-
-  return date;
-};
-
 router.post(
   "/auth/sign-up",
   bodySchema(
@@ -113,18 +101,13 @@ router.post(
       role: "user"
     }).save();
 
-    const token = createRandomToken();
-    const dateFromNow = createDateAddDaysFromNow(2); // expires in 2 days
-
-    await new DisposableToken({
+    const tokenRecord = await tokenService.createDisposable({
       userId: user.id,
       email,
-      kind: DisposableTokenKind.Verify,
-      token,
-      expiresAt: dateFromNow
-    }).save();
+      kind: DisposableTokenKind.Verify
+    });
 
-    mailPresets.verification(email, token, user.id);
+    mailPresets.verification(email, tokenRecord.token, user.id);
 
     return reply(res);
   })
@@ -141,18 +124,9 @@ router.post(
   ah(async (req, res) => {
     const { userId, token } = req.body;
 
-    let record = await DisposableToken.findOneAndUpdate(
-      {
-        userId,
-        token,
-        used: false,
-        kind: DisposableTokenKind.Verify,
-        expiresAt: { $gte: new Date() }
-      },
-      {
-        used: true,
-        usedAt: new Date()
-      }
+    let record = await tokenService.consumeDisposable(
+      { userId, token },
+      DisposableTokenKind.Verify
     );
 
     if (!record) {
@@ -193,18 +167,13 @@ router.post(
     const user = await User.findOne({ email });
 
     if (user) {
-      const token = createRandomToken();
-      const dateFromNow = createDateAddDaysFromNow(2); // expires in 2 days
-
-      await new DisposableToken({
+      const tokenRecord = await tokenService.createDisposable({
         userId: user.id,
         email,
-        kind: DisposableTokenKind.ResetPassword,
-        token,
-        expiresAt: dateFromNow
-      }).save();
+        kind: DisposableTokenKind.ResetPassword
+      });
 
-      mailPresets.resetPassword(email, token, user.id);
+      mailPresets.resetPassword(email, tokenRecord.token, user.id);
     }
 
     return reply(res);
@@ -223,18 +192,9 @@ router.post(
   ah(async (req, res) => {
     const { userId, token, newPassword } = req.body;
 
-    let record = await DisposableToken.findOneAndUpdate(
-      {
-        userId,
-        token,
-        used: false,
-        kind: DisposableTokenKind.ResetPassword,
-        expiresAt: { $gte: new Date() }
-      },
-      {
-        used: true,
-        usedAt: new Date()
-      }
+    let record = await tokenService.consumeDisposable(
+      { userId, token },
+      DisposableTokenKind.ResetPassword
     );
 
     if (!record) {
