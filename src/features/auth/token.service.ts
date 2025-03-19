@@ -1,3 +1,5 @@
+import { AccessTokenClaims } from "@/contracts/AccessTokenClaims";
+import { appEnv } from "@/lib/app-env";
 import { createDateAddDaysFromNow } from "@/lib/dates";
 import {
   DisposableToken,
@@ -5,8 +7,26 @@ import {
 } from "@/models/disposable-token";
 import { Types } from "mongoose";
 import crypto from "node:crypto";
+import jwt from "jsonwebtoken";
+import { IUser } from "@/models/user";
 
 export const tokenService = {
+  // Generate an access token
+  genAccess: (user: IUser) => {
+    return new Promise<string>((resolve, reject) =>
+      jwt.sign(
+        {
+          uid: user.id.toString()
+        } satisfies AccessTokenClaims,
+        appEnv.JWT_SIGNING_KEY || "",
+        (err: any, token: string) => {
+          if (err) reject(err);
+          else resolve(token);
+        }
+      )
+    );
+  },
+
   genDisposable({ length = 16 }: { length?: number } = {}) {
     return crypto.randomBytes(length).toString("hex");
   },

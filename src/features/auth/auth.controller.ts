@@ -2,10 +2,6 @@ import express from "express";
 import ah from "express-async-handler";
 import { ApplicationError, NotFound } from "@/lib/errors";
 
-import { AccessTokenClaims } from "@/contracts/AccessTokenClaims";
-import jwt from "jsonwebtoken";
-import { appEnv } from "@/lib/app-env";
-
 import { comparePassword, hashPassword } from "./hashing";
 import { reply } from "@/lib/app-reply";
 import { bodySchema } from "@/middleware/validation";
@@ -15,27 +11,10 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "@/models/user";
 import { mailPresets } from "@/mailer/mailer";
 
-import {
-  DisposableToken,
-  DisposableTokenKind
-} from "@/models/disposable-token";
-import { createDateAddDaysFromNow } from "@/lib/dates";
+import { DisposableTokenKind } from "@/models/disposable-token";
 import { tokenService } from "./token.service";
 
 export const router = express.Router();
-
-function createAccessToken(user: any) {
-  return new Promise<string>((resolve, reject) =>
-    jwt.sign(
-      { uid: user._id.toString() } satisfies AccessTokenClaims,
-      appEnv.JWT_SIGNING_KEY || "",
-      (err: any, token: string) => {
-        if (err) reject(err);
-        else resolve(token);
-      }
-    )
-  );
-}
 
 router.post(
   "/auth/login",
@@ -61,7 +40,7 @@ router.post(
       throw new ApplicationError("Invalid email or password", 401);
     }
 
-    let accessToken = await createAccessToken(user);
+    let accessToken = await tokenService.genAccess(user);
 
     return reply(res, {
       accessToken,
@@ -143,7 +122,7 @@ router.post(
       throw new NotFound();
     }
 
-    let accessToken = await createAccessToken(user);
+    let accessToken = await tokenService.genAccess(user);
 
     return reply(res, {
       accessToken,
