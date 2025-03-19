@@ -5,7 +5,7 @@ import { ValidationError } from "joi";
 import { JoiValidationError } from "@/lib/errors";
 
 export const customJoi = {
-  id: () => Joi.string().hex().length(24).required(),
+  id: () => Joi.string().hex().length(24),
   optionalString: () => Joi.string().allow("").allow(null),
   optionalDate: () => Joi.date().allow("").allow(null)
 };

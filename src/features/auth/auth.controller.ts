@@ -6,7 +6,7 @@ import Joi from "joi";
 import { reply } from "@/lib/app-reply";
 import { ApplicationError, NotFound } from "@/lib/errors";
 
-import { bodySchema } from "@/middleware/validation";
+import { bodySchema, customJoi } from "@/middleware/validation";
 
 import { DisposableTokenKind } from "@/models/disposable-token";
 import { User } from "@/models/user";
@@ -98,7 +98,7 @@ router.post(
   "/auth/verify",
   bodySchema(
     Joi.object({
-      userId: Joi.string().required(),
+      userId: customJoi.id().required(),
       token: Joi.string().required()
     })
   ),
@@ -165,7 +165,7 @@ router.post(
   "/auth/forget-password/set",
   bodySchema(
     Joi.object({
-      userId: Joi.string().required(),
+      userId: customJoi.id().required(),
       token: Joi.string().required(),
       newPassword: Joi.string().required()
     })
