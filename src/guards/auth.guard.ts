@@ -37,7 +37,11 @@ const applyAuthToken = async (
 
   const user =
     claims && Types.ObjectId.isValid(claims.uid)
-      ? await User.findOne({ _id: claims.uid }).exec()
+      ? await User.findOne({
+          _id: claims.uid,
+          isActive: true,
+          isVerified: true
+        }).exec()
       : null;
 
   if (user === null) {

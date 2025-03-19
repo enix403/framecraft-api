@@ -19,13 +19,13 @@ POST {{baseUrl}}/temp
 
 ###
 # -------------------------
-# @name CmdRegister
-POST {{baseUrl}}/auth/register
+# @name CmdSignUp
+POST {{baseUrl}}/auth/sign-up
 
 {
-  "email": "user2@gmail.com",
+  "email": "user3@gmail.com",
   "password": "pass",
-  "fullName": "User 2"
+  "fullName": "User 3"
 }
 
 ###

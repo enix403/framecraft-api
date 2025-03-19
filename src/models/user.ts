@@ -8,6 +8,7 @@ export interface IUser extends Document<Types.ObjectId> {
   role: "admin" | "user";
   fullName: string;
   isActive: boolean;
+  isVerified: boolean;
 }
 
 const userSchema = new Schema<IUser>(
@@ -21,7 +22,8 @@ const userSchema = new Schema<IUser>(
     },
 
     fullName: { type: String, required: true },
-    isActive: { type: Boolean, default: true }
+    isActive: { type: Boolean, default: true },
+    isVerified: { type: Boolean, default: false }
   },
   {
     toObject: { virtuals: true },
@@ -35,5 +37,11 @@ const userSchema = new Schema<IUser>(
     }
   }
 );
+
+userSchema.virtual("verifications", {
+  ref: "Verification",
+  localField: "_id",
+  foreignField: "userId",
+});
 
 export const User = model("User", userSchema);

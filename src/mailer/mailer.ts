@@ -1,3 +1,4 @@
+import path from "node:path";
 import { appEnv } from "@/lib/app-env";
 import nodemailer from "nodemailer";
 import Email from "email-templates";
@@ -16,7 +17,7 @@ const transport = nodemailer.createTransport({
 
 const mailer = new Email({
   views: {
-    root: "/home/radium/ser/follows/allapi/src/mailer/templates",
+    root: path.join(__dirname, "templates"),
     locals: {
       clientUrl: appEnv.CLIENT_URL
     }

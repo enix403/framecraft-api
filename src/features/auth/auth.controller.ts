@@ -3,8 +3,6 @@ import ah from "express-async-handler";
 import { ApplicationError } from "@/lib/errors";
 
 import { AccessTokenClaims } from "@/contracts/AccessTokenClaims";
-import { User } from "@/models/user";
-
 import jwt from "jsonwebtoken";
 import { appEnv } from "@/lib/app-env";
 
@@ -14,9 +12,13 @@ import { bodySchema } from "@/middleware/validation";
 import Joi from "joi";
 import { StatusCodes } from "http-status-codes";
 
+import { User } from "@/models/user";
+import { Verification } from "@/models/verification";
+import { startSession } from "mongoose";
+
 export const router = express.Router();
 
-function createToken(user: any) {
+function createAccessToken(user: any) {
   return new Promise<string>((resolve, reject) =>
     jwt.sign(
       { uid: user._id.toString() } satisfies AccessTokenClaims,
@@ -49,12 +51,12 @@ router.post(
       throw new ApplicationError("Invalid email or password", 401);
     }
 
-    let token = await createToken(user);
+    let token = await createAccessToken(user);
 
     return reply(res, { token, user });
   })
 );
-
+/*
 router.post(
   "/auth/register",
   bodySchema(
@@ -78,16 +80,102 @@ router.post(
 
     const passwordHash = await hashPassword(password);
 
-    let user = new User({
+    let user = new User.create({
+      ...restData,
+      email,
+      passwordHash,
+      role: "user",
+      isVerified: false,
+    });
+
+    user = await user.save();
+
+    return reply(res, user);
+  })
+);
+ */
+
+function createCryptoString() {
+  return `dkawjdldwjalw${Math.random() * 1000}`;
+}
+
+export const createDateAddDaysFromNow = (days: number) => {
+  const date = new Date();
+
+  date.setDate(date.getDate() + days);
+
+  return date;
+};
+
+router.post(
+  "/auth/sign-up",
+  bodySchema(
+    Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+      fullName: Joi.string().required()
+    })
+  ),
+  ah(async (req, res) => {
+    const { email, password, ...restData } = req.body;
+
+    // const session = await startSession();
+    // try {
+    const isUserExist = await User.exists({ email });
+
+    if (isUserExist) {
+      throw new ApplicationError(
+        "Email already registered",
+        StatusCodes.CONFLICT,
+        "email_taken"
+      );
+    }
+
+    // session.startTransaction();
+    const passwordHash = await hashPassword(password);
+
+    const user = await new User({
       ...restData,
       email,
       passwordHash,
       role: "user"
     });
+    // .save({ session });
 
-    user = await user.save();
-    const token = await createToken(user);
+    const cryptoString = createCryptoString();
+    const dateFromNow = createDateAddDaysFromNow(2); // expires in 2 days
 
-    return reply(res, { token, user });
+    await new Verification({
+      userId: user.id,
+      email,
+      token: cryptoString,
+      expiresIn: dateFromNow
+    });
+    // .save({ session });
+
+    /*
+      const userMail = new UserMail();
+
+      userMail.signUp({
+        email: user.email
+      });
+
+      userMail.verification({
+        email: user.email,
+        accessToken: cryptoString
+      }); */
+
+    // await session.commitTransaction();
+    // session.endSession();
+
+    return reply(res);
+    // } catch (error) {
+    //   if (session.inTransaction()) {
+    //     await session.abortTransaction();
+    //     session.endSession();
+    //   }
+
+    //   throw error;
+    // }
   })
 );
