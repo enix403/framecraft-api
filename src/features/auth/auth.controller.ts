@@ -15,11 +15,14 @@ import { mailPresets } from "@/mailer/mailer";
 import { comparePassword, hashPassword } from "./hashing";
 import { tokenService } from "./token.service";
 
-export const router = new ApiRouter();
+export const router = new ApiRouter({
+  pathPrefix: "/auth",
+  defaultTags: ["Authentication"]
+});
 
 router.add(
   {
-    path: "/auth/login",
+    path: "/login",
     method: "POST",
     schema: {
       body: Joi.object({
@@ -55,7 +58,7 @@ router.add(
 
 router.add(
   {
-    path: "/auth/sign-up",
+    path: "/sign-up",
     method: "POST",
     schema: {
       body: Joi.object({
@@ -101,7 +104,7 @@ router.add(
 
 router.add(
   {
-    path: "/auth/verify",
+    path: "/verify",
     method: "POST",
     schema: {
       body: Joi.object({
@@ -145,7 +148,7 @@ router.add(
 
 router.add(
   {
-    path: "/auth/forget-password/init",
+    path: "/forget-password/init",
     method: "POST",
     schema: {
       body: Joi.object({
@@ -174,7 +177,7 @@ router.add(
 
 router.add(
   {
-    path: "/auth/forget-password/set",
+    path: "/forget-password/set",
     method: "POST",
     schema: {
       body: Joi.object({

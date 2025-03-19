@@ -8,7 +8,9 @@ import { customJoi } from "@/middleware/validation";
 import { DisposableToken } from "@/models/disposable-token";
 import { User } from "@/models/user";
 
-export const router = new ApiRouter();
+export const router = new ApiRouter({
+  defaultTags: ["Health & Monitoring"]
+});
 
 router.add(
   {

@@ -32,11 +32,20 @@ export class ApiRouter {
   private readonly expressRouter: ExpressRouter;
   private readonly routes: RouteInfo[] = [];
   private readonly childRouters: { path?: string; router: ApiRouter }[] = [];
-  private readonly parentPath?: string;
 
-  constructor(parentPath?: string) {
+  private readonly pathPrefix?: string;
+  private readonly defaultTags?: string[];
+
+  constructor({
+    pathPrefix,
+    defaultTags
+  }: {
+    pathPrefix?: string;
+    defaultTags?: string[];
+  } = {}) {
     this.expressRouter = ExpressRouter();
-    this.parentPath = parentPath;
+    this.pathPrefix = pathPrefix;
+    this.defaultTags = defaultTags;
   }
 
   public add<T extends RouteInfo>(
@@ -56,15 +65,19 @@ export class ApiRouter {
       valMiddlewares.push(bodySchema(schema.body));
     }
 
+    // Compute full path by prepending pathPrefix if present
+    const fullPath = this.pathPrefix ? `${this.pathPrefix}${path}` : path;
+
     // Register route
     (this.expressRouter as any)[method.toLowerCase()](
-      path,
+      fullPath,
       [...middlewares, ...valMiddlewares],
       handler
     );
 
-    // Compute full path by prepending parentPath if present
-    const fullPath = this.parentPath ? `${this.parentPath}${path}` : path;
+    if (!route.tags) {
+      route.tags = this.defaultTags;
+    }
 
     // Store route info with updated path for Swagger
     this.routes.push({ ...route, path: fullPath });
