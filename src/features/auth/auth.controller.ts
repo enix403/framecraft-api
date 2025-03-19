@@ -116,7 +116,7 @@ router.add(
     method: "POST",
     summary: "Verify Email",
     desc:
-      "Verifies a user's email using a one-time token. Marks the user" +
+      "Verifies a user's email using a one-time token. Marks the user " +
       "as verified and returns an access token upon success.",
     schema: {
       body: Joi.object({
