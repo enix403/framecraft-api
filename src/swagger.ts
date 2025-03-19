@@ -4,6 +4,7 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
 import type { ApiRouter } from "@/lib/ApiRouter";
+
 import { appEnv } from "./lib/app-env";
 
 export function buildSwaggerSpec(apiRouter: ApiRouter) {
@@ -61,15 +62,6 @@ export function buildSwaggerSpec(apiRouter: ApiRouter) {
               responses: {
                 [StatusCodes.OK]: {
                   description: "Success"
-                },
-                [StatusCodes.UNAUTHORIZED]: {
-                  description: "Unauthorized"
-                },
-                [StatusCodes.BAD_REQUEST]: {
-                  description: "Bad Request"
-                },
-                [StatusCodes.FORBIDDEN]: {
-                  description: "Forbidden"
                 }
               }
             }

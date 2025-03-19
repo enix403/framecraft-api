@@ -24,6 +24,10 @@ router.add(
   {
     path: "/login",
     method: "POST",
+    summary: "User Login",
+    desc:
+      "Allows users to log in using their email and password. " +
+      "Returns an access token upon successful authentication.",
     schema: {
       body: Joi.object({
         email: Joi.string().email().required(),
@@ -60,6 +64,10 @@ router.add(
   {
     path: "/sign-up",
     method: "POST",
+    summary: "User Registration",
+    desc:
+      "Registers a new user with an email, password, and full name. " +
+      "Sends a verification email upon successful registration.",
     schema: {
       body: Joi.object({
         email: Joi.string().email().required(),
@@ -106,6 +114,10 @@ router.add(
   {
     path: "/verify",
     method: "POST",
+    summary: "Verify Email",
+    desc:
+      "Verifies a user's email using a one-time token. Marks the user" +
+      "as verified and returns an access token upon success.",
     schema: {
       body: Joi.object({
         userId: customJoi.id().required(),
@@ -150,6 +162,8 @@ router.add(
   {
     path: "/forget-password/init",
     method: "POST",
+    summary: "Initiate Password Reset",
+    desc: "Sends a password reset link to the user's email if the email is registered in the system.",
     schema: {
       body: Joi.object({
         email: Joi.string().email().required()
@@ -179,6 +193,8 @@ router.add(
   {
     path: "/forget-password/set",
     method: "POST",
+    summary: "Set New Password",
+    desc: "Allows users to set a new password using a one-time token sent via email.",
     schema: {
       body: Joi.object({
         userId: customJoi.id().required(),
