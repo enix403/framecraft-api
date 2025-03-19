@@ -1,6 +1,6 @@
 import { model, Document, Schema, Types } from "mongoose";
 
-export interface IVerification extends Document<Types.ObjectId> {
+export interface IResetPassword extends Document<Types.ObjectId> {
   userId: Types.ObjectId;
   email: string;
   token: string;
@@ -9,7 +9,7 @@ export interface IVerification extends Document<Types.ObjectId> {
   usedAt: Date;
 }
 
-const VerificationSchema = new Schema<IVerification>(
+const ResetPasswordSchema = new Schema<IResetPassword>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -29,11 +29,11 @@ const VerificationSchema = new Schema<IVerification>(
   }
 );
 
-VerificationSchema.virtual("user", {
+ResetPasswordSchema.virtual("user", {
   ref: "User",
   localField: "userId",
   foreignField: "_id",
   justOne: true
 });
 
-export const Verification = model("Verification", VerificationSchema);
+export const ResetPassword = model("ResetPassword", ResetPasswordSchema);

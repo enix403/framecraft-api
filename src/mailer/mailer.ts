@@ -41,5 +41,15 @@ export const mailPresets = {
       })
       .then(() => {
         appLogger.info(`Mail "verification" sent to "${email}"`);
+      }),
+  resetPassword: (email: string, token: string, userId: string) =>
+    mailer
+      .send({
+        template: "reset-password",
+        message: { to: email },
+        locals: { token, userId }
+      })
+      .then(() => {
+        appLogger.info(`Mail "reset-password" sent to "${email}"`);
       })
 };

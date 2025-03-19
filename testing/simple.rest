@@ -12,10 +12,6 @@ Authorization: Bearer {{accessToken}}
 POST {{baseUrl}}/temp
 
 # ==================================
-# ==================================
-# ==================================
-# ==================================
-# ==================================
 
 ###
 # -------------------------
@@ -49,10 +45,15 @@ POST {{baseUrl}}/auth/login
 }
 
 ###
-@accessToken = {{CmdLogin.response.body.$.token}}
+# -------------------------
+# @name CmdForget
+POST {{baseUrl}}/auth/forget-password
 
-# ==================================
-# ==================================
-# ==================================
+{
+  "email": "user1@gmail.com"
+}
+
+###
+@accessToken = {{CmdLogin.response.body.$.accessToken}}
 
 

@@ -17,6 +17,7 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "@/models/user";
 import { Verification } from "@/models/verification";
 import { mailPresets } from "@/mailer/mailer";
+import { ResetPassword } from "@/models/reset-password";
 
 export const router = express.Router();
 
@@ -62,7 +63,7 @@ router.post(
   })
 );
 
-function createVerificationToken() {
+function createRandomToken() {
   return crypto.randomBytes(16).toString("hex");
 }
 
@@ -105,7 +106,7 @@ router.post(
       role: "user"
     }).save();
 
-    const token = createVerificationToken();
+    const token = createRandomToken();
     const dateFromNow = createDateAddDaysFromNow(2); // expires in 2 days
 
     await new Verification({
@@ -139,7 +140,10 @@ router.post(
         used: false
         // TODO: expires in
       },
-      { used: true }
+      {
+        used: true,
+        usedAt: new Date()
+      }
     );
 
     if (!verif) {
@@ -158,5 +162,37 @@ router.post(
       accessToken,
       user
     });
+  })
+);
+
+/* ====================== */
+
+router.post(
+  "/auth/forget-password",
+  bodySchema(
+    Joi.object({
+      email: Joi.string().email().required()
+    })
+  ),
+  ah(async (req, res) => {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (user) {
+      const token = createRandomToken();
+      const dateFromNow = createDateAddDaysFromNow(2); // expires in 2 days
+
+      await new ResetPassword({
+        userId: user.id,
+        email,
+        token: token,
+        expiresIn: dateFromNow
+      }).save();
+
+      mailPresets.resetPassword(email, token, user.id);
+    }
+
+    return reply(res);
   })
 );
