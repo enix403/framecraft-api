@@ -105,6 +105,7 @@ function createApp() {
     morgan(
       `:method :url -> ${cyan(":status")} ${blackBright("(:remote-addr)")}`,
       {
+        skip: (req, res) => req.originalUrl.startsWith("/docs"),
         stream: {
           write: message => appLogger.http(message.trim())
         }
@@ -116,6 +117,9 @@ function createApp() {
   app.use(apiRouter.getExpressRouter());
 
   const spec = buildSwaggerSpec(apiRouter);
+  app.get("/docs.json", (_, res) => {
+    res.json(spec);
+  });
   app.use("/docs", swaggerDocs(spec));
 
   app.all("*", () => {
