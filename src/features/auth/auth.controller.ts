@@ -156,6 +156,10 @@ router.post(
       { returnDocument: "after" }
     );
 
+    if (!user) {
+      throw new NotFound();
+    }
+
     let accessToken = await createAccessToken(user);
 
     return reply(res, {
@@ -168,7 +172,7 @@ router.post(
 /* ====================== */
 
 router.post(
-  "/auth/forget-password",
+  "/auth/forget-password/init",
   bodySchema(
     Joi.object({
       email: Joi.string().email().required()
@@ -191,6 +195,51 @@ router.post(
       }).save();
 
       mailPresets.resetPassword(email, token, user.id);
+    }
+
+    return reply(res);
+  })
+);
+
+router.post(
+  "/auth/forget-password/set",
+  bodySchema(
+    Joi.object({
+      userId: Joi.string().required(),
+      token: Joi.string().required(),
+      newPassword: Joi.string().required()
+    })
+  ),
+  ah(async (req, res) => {
+    const { userId, token, newPassword } = req.body;
+
+    let resetPass = await ResetPassword.findOneAndUpdate(
+      {
+        userId,
+        token,
+        used: false
+        // TODO: expires in
+      },
+      {
+        used: true,
+        usedAt: new Date()
+      }
+    );
+
+    if (!resetPass) {
+      throw new NotFound();
+    }
+
+    const passwordHash = await hashPassword(newPassword);
+
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      { passwordHash },
+      { returnDocument: "after" }
+    );
+
+    if (!user) {
+      throw new NotFound();
     }
 
     return reply(res);

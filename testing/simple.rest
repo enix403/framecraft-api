@@ -46,12 +46,24 @@ POST {{baseUrl}}/auth/login
 
 ###
 # -------------------------
-# @name CmdForget
-POST {{baseUrl}}/auth/forget-password
+# @name CmdForgetInit
+POST {{baseUrl}}/auth/forget-password/init
 
 {
-  "email": "user1@gmail.com"
+  "email": "user2@gmail.com"
 }
+
+###
+# -------------------------
+# @name CmdForgetSet
+POST {{baseUrl}}/auth/forget-password/set
+
+{
+  "userId": "67d9cb4047e29e1523ca4f24",
+  "token": "adcb66df8df34a410f547420c3580f50",
+  "newPassword": "pass2"
+}
+
 
 ###
 @accessToken = {{CmdLogin.response.body.$.accessToken}}
