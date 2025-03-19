@@ -19,9 +19,9 @@ POST {{baseUrl}}/temp
 POST {{baseUrl}}/auth/sign-up
 
 {
-  "email": "user50@gmail.com",
+  "email": "user51@gmail.com",
   "password": "pass",
-  "fullName": "User 4"
+  "fullName": "Halo"
 }
 
 ###
@@ -30,8 +30,8 @@ POST {{baseUrl}}/auth/sign-up
 POST {{baseUrl}}/auth/verify
 
 {
-  "userId": "67da7b1466769157950b8673",
-  "token": "2ce28f7ad3706219f2ad39b5addf96ba"
+  "userId": "67da8598625c22786e43c0a1",
+  "token": "cb0db12622c4092dce9fa157b4fb6aab"
 }
 
 ###
@@ -40,8 +40,8 @@ POST {{baseUrl}}/auth/verify
 POST {{baseUrl}}/auth/login
 
 {
-  "email": "user1@gmail.com",
-  "password": "pass"
+  "email": "user51@gmail.com",
+  "password": "pass2"
 }
 
 ###
@@ -50,7 +50,7 @@ POST {{baseUrl}}/auth/login
 POST {{baseUrl}}/auth/forget-password/init
 
 {
-  "email": "user2@gmail.com"
+  "email": "user51@gmail.com"
 }
 
 ###
@@ -59,8 +59,8 @@ POST {{baseUrl}}/auth/forget-password/init
 POST {{baseUrl}}/auth/forget-password/set
 
 {
-  "userId": "67d9cb4047e29e1523ca4f24",
-  "token": "adcb66df8df34a410f547420c3580f50",
+  "userId": "67da8598625c22786e43c0a1",
+  "token": "7c5b2330b627ca0aac56e19ca827fc76",
   "newPassword": "pass2"
 }
 

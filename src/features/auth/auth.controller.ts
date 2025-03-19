@@ -15,9 +15,12 @@ import Joi from "joi";
 import { StatusCodes } from "http-status-codes";
 
 import { User } from "@/models/user";
-import { Verification } from "@/models/verification";
 import { mailPresets } from "@/mailer/mailer";
-import { ResetPassword } from "@/models/reset-password";
+
+import {
+  DisposableToken,
+  DisposableTokenKind
+} from "@/models/disposable-token";
 
 export const router = express.Router();
 
@@ -45,7 +48,11 @@ router.post(
   ah(async (req, res) => {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      email,
+      isVerified: true,
+      isActive: true
+    });
 
     if (
       user == null ||
@@ -109,11 +116,12 @@ router.post(
     const token = createRandomToken();
     const dateFromNow = createDateAddDaysFromNow(2); // expires in 2 days
 
-    await new Verification({
+    await new DisposableToken({
       userId: user.id,
       email,
-      token: token,
-      expiresIn: dateFromNow
+      kind: DisposableTokenKind.Verify,
+      token,
+      expiresAt: dateFromNow
     }).save();
 
     mailPresets.verification(email, token, user.id);
@@ -133,12 +141,13 @@ router.post(
   ah(async (req, res) => {
     const { userId, token } = req.body;
 
-    let verif = await Verification.findOneAndUpdate(
+    let record = await DisposableToken.findOneAndUpdate(
       {
         userId,
         token,
-        used: false
-        // TODO: expires in
+        used: false,
+        kind: DisposableTokenKind.Verify,
+        expiresAt: { $gte: new Date() }
       },
       {
         used: true,
@@ -146,7 +155,7 @@ router.post(
       }
     );
 
-    if (!verif) {
+    if (!record) {
       throw new NotFound();
     }
 
@@ -187,11 +196,12 @@ router.post(
       const token = createRandomToken();
       const dateFromNow = createDateAddDaysFromNow(2); // expires in 2 days
 
-      await new ResetPassword({
+      await new DisposableToken({
         userId: user.id,
         email,
-        token: token,
-        expiresIn: dateFromNow
+        kind: DisposableTokenKind.ResetPassword,
+        token,
+        expiresAt: dateFromNow
       }).save();
 
       mailPresets.resetPassword(email, token, user.id);
@@ -213,12 +223,13 @@ router.post(
   ah(async (req, res) => {
     const { userId, token, newPassword } = req.body;
 
-    let resetPass = await ResetPassword.findOneAndUpdate(
+    let record = await DisposableToken.findOneAndUpdate(
       {
         userId,
         token,
-        used: false
-        // TODO: expires in
+        used: false,
+        kind: DisposableTokenKind.ResetPassword,
+        expiresAt: { $gte: new Date() }
       },
       {
         used: true,
@@ -226,7 +237,7 @@ router.post(
       }
     );
 
-    if (!resetPass) {
+    if (!record) {
       throw new NotFound();
     }
 

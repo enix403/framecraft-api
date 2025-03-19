@@ -38,10 +38,10 @@ const userSchema = new Schema<IUser>(
   }
 );
 
-userSchema.virtual("verifications", {
-  ref: "Verification",
-  localField: "_id",
-  foreignField: "userId",
-});
+// userSchema.virtual("verifications", {
+//   ref: "Verification",
+//   localField: "_id",
+//   foreignField: "userId",
+// });
 
 export const User = model("User", userSchema);

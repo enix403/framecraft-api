@@ -1,15 +1,21 @@
 import { model, Document, Schema, Types } from "mongoose";
 
-export interface IResetPassword extends Document<Types.ObjectId> {
+export enum DisposableTokenKind {
+  Verify = 'Verify',
+  ResetPassword = 'ResetPassword',
+}
+
+export interface IDisposableToken extends Document<Types.ObjectId> {
   userId: Types.ObjectId;
   email: string;
+  kind: string;
   token: string;
-  expiresIn: Date;
+  expiresAt: Date;
   used: boolean;
   usedAt: Date;
 }
 
-const ResetPasswordSchema = new Schema<IResetPassword>(
+const DisposableTokenSchema = new Schema<IDisposableToken>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -17,8 +23,9 @@ const ResetPasswordSchema = new Schema<IResetPassword>(
       required: true
     },
     email: { type: String, required: true },
+    kind: { type: String, required: true },
     token: { type: String, required: true },
-    expiresIn: { type: Date, required: true },
+    expiresAt: { type: Date, required: true },
     used: { type: Boolean, required: true, default: false },
     usedAt: { type: Date }
   },
@@ -29,11 +36,11 @@ const ResetPasswordSchema = new Schema<IResetPassword>(
   }
 );
 
-ResetPasswordSchema.virtual("user", {
+DisposableTokenSchema.virtual("user", {
   ref: "User",
   localField: "userId",
   foreignField: "_id",
   justOne: true
 });
 
-export const ResetPassword = model("ResetPassword", ResetPasswordSchema);
+export const DisposableToken = model("DisposableToken", DisposableTokenSchema);
