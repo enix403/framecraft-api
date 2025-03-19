@@ -5,14 +5,14 @@ import {
   Response
 } from "express";
 import { StatusCodes } from "http-status-codes";
-import Joi, { ObjectSchema } from "joi";
+import { ObjectSchema } from "joi";
 import joiToSwagger from "joi-to-swagger";
 import swaggerJsdoc from "swagger-jsdoc";
 
-// Type for schema definitions
+import { bodySchema, paramSchema, querySchema } from "@/middleware/validation";
+
 type RouteInputSchema = ObjectSchema;
 
-// Route metadata
 export type RouteInfo = {
   path: string;
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
@@ -43,33 +43,23 @@ export class ApiRouter {
     route: T,
     handler: (req: Request, res: Response) => void | Promise<void>
   ) {
-    const { path, method, middlewares = [] } = route;
+    const { path, method, schema, middlewares = [] } = route;
 
-    // Middleware for validation
-    const validationMiddleware = (
-      req: Request,
-      res: Response,
-      next: NextFunction
-    ) => {
-      try {
-        if (route.schema?.params)
-          req.params = route.schema.params.validate(req.params).value;
-        if (route.schema?.query)
-          req.query = route.schema.query.validate(req.query).value;
-        if (route.schema?.body)
-          req.body = route.schema.body.validate(req.body).value;
-        next();
-      } catch (error) {
-        return res
-          .status(400)
-          .json({ error: error.details.map((d: any) => d.message) });
-      }
-    };
+    const valMiddlewares: any[] = [];
+    if (schema?.params) {
+      valMiddlewares.push(paramSchema(schema.params));
+    }
+    if (schema?.query) {
+      valMiddlewares.push(querySchema(schema.query));
+    }
+    if (schema?.body) {
+      valMiddlewares.push(bodySchema(schema.body));
+    }
 
     // Register route
     (this.expressRouter as any)[method.toLowerCase()](
       path,
-      [...middlewares, validationMiddleware],
+      [...middlewares, ...valMiddlewares],
       handler
     );
 
@@ -175,7 +165,7 @@ export class ApiRouter {
                   },
                   [StatusCodes.FORBIDDEN]: {
                     description: "Forbidden"
-                  },
+                  }
                 }
               }
             };

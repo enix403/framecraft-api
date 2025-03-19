@@ -120,7 +120,7 @@ function createApp() {
   app.get("/docs.json", (_, res) => {
     res.json(spec);
   });
-  app.use("/docs", swaggerDocs(spec));
+  app.use("/docs", ...swaggerDocs(spec));
 
   app.all("*", () => {
     throw new NotFound();

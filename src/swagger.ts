@@ -1,4 +1,3 @@
-import { Router as ExpressRouter } from "express";
 import { StatusCodes } from "http-status-codes";
 import joiToSwagger from "joi-to-swagger";
 import swaggerJsdoc from "swagger-jsdoc";
