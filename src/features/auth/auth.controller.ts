@@ -195,6 +195,38 @@ router.add(
 
 router.add(
   {
+    path: "/forget-password/check",
+    method: "POST",
+    summary: "Check reset password token",
+    desc: "Check if the given reset password token in valid or not",
+    schema: {
+      body: Joi.object({
+        userId: customJoi.id().required(),
+        token: Joi.string().required()
+      })
+    }
+  },
+  async (req, res) => {
+    const { userId, token } = req.body;
+
+    let record = await tokenService
+      .findDisposable({ userId, token }, DisposableTokenKind.ResetPassword)
+      .populate<{ user: any }>("user");
+
+    if (!record || !record.user) {
+      throw new NotFound();
+    }
+
+    return reply(res, {
+      userId: record.user.id,
+      userEmail: record.user.email,
+      token,
+    });
+  }
+);
+
+router.add(
+  {
     path: "/forget-password/set",
     method: "POST",
     summary: "Set New Password",

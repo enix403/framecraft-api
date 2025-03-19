@@ -58,6 +58,25 @@ export const tokenService = {
     }).save();
   },
 
+  findDisposable: (
+    {
+      userId,
+      token
+    }: {
+      userId: Types.ObjectId;
+      token: string;
+    },
+    kind: DisposableTokenKind
+  ) => {
+    return DisposableToken.findOne({
+      userId,
+      token,
+      kind,
+      used: false,
+      expiresAt: { $gte: new Date() }
+    });
+  },
+
   consumeDisposable: (
     {
       userId,
