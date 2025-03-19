@@ -4,19 +4,20 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
 import type { ApiRouter } from "@/lib/ApiRouter";
+import { appEnv } from "./lib/app-env";
 
 export function buildSwaggerSpec(apiRouter: ApiRouter) {
   return swaggerJsdoc({
     definition: {
       openapi: "3.0.0",
       info: {
-        // todo: set name and version from env
-        title: "API Documentation",
-        version: "1.0.0"
+        title: appEnv.APP_NAME + " API",
+        version: appEnv.APP_VERSION
       },
       paths: apiRouter.getRoutesInfo().reduce(
         (acc, route) => {
-          const swaggerPath = route.path.replace(/:([a-zA-Z]+)/g, "{$1}"); // Convert Express params to OpenAPI style
+          // Convert Express params to OpenAPI style
+          const swaggerPath = route.path.replace(/:([a-zA-Z]+)/g, "{$1}");
 
           const querySchema = route.schema?.query
             ? joiToSwagger(route.schema.query).swagger
@@ -82,7 +83,7 @@ export function buildSwaggerSpec(apiRouter: ApiRouter) {
   });
 }
 
-export const swaggerDocs = (spec: any) => [
+export const swaggerDocs = (spec: object) => [
   swaggerUi.serve,
   swaggerUi.setup(spec)
 ];

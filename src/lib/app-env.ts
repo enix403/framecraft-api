@@ -86,6 +86,9 @@ function requireEnv(key: string, isNumber: boolean = false): string {
 export const appEnv = {
   NODE_ENV: getEnv("NODE_ENV", "production"),
   PORT: getEnv("PORT"),
+  // General
+  APP_NAME: getEnv("APP_NAME", "app"),
+  APP_VERSION: getEnv("APP_VERSION", "0.0.0"),
   // Jwt
   JWT_SIGNING_KEY: getEnv("JWT_SIGNING_KEY"),
   // Application
