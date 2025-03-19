@@ -6,7 +6,7 @@ import { router as healthRouter } from "./health/health.controller";
 export function createRootApiRouter() {
   const router = new ApiRouter();
 
-  router.addRouter(healthRouter);
+  router.use(healthRouter);
   // router.addRouter(authRouter);
 
   return router;

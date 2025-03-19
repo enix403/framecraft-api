@@ -112,11 +112,9 @@ function createApp() {
     )
   );
 
-  const rootRouter = new ApiRouter();
-  rootRouter.addRouter("/api", createRootApiRouter());
-  app.use(rootRouter.getRouter());
-  // Serve Swagger Docs
-  rootRouter.serveDocs(app);
+  const apiRouter = createRootApiRouter();
+  app.use(apiRouter.getExpressRouter());
+  apiRouter.serveDocs(app);
 
   app.all("*", () => {
     throw new NotFound();
