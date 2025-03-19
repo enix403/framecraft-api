@@ -5,6 +5,7 @@ export interface IVerification extends Document<Types.ObjectId> {
   email: string;
   token: string;
   expiresIn: Date;
+  used: boolean;
 }
 
 const VerificationSchema = new Schema<IVerification>(
@@ -16,7 +17,8 @@ const VerificationSchema = new Schema<IVerification>(
     },
     email: { type: String, required: true },
     token: { type: String, required: true },
-    expiresIn: { type: Date, required: true }
+    expiresIn: { type: Date, required: true },
+    used: { type: Boolean, required: true, default: false }
   },
   {
     timestamps: true,

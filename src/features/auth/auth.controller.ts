@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 
 import express from "express";
 import ah from "express-async-handler";
-import { ApplicationError } from "@/lib/errors";
+import { ApplicationError, NotFound } from "@/lib/errors";
 
 import { AccessTokenClaims } from "@/contracts/AccessTokenClaims";
 import jwt from "jsonwebtoken";
@@ -53,52 +53,17 @@ router.post(
       throw new ApplicationError("Invalid email or password", 401);
     }
 
-    let token = await createAccessToken(user);
+    let accessToken = await createAccessToken(user);
 
-    return reply(res, { token, user });
-  })
-);
-/*
-router.post(
-  "/auth/register",
-  bodySchema(
-    Joi.object({
-      email: Joi.string().email().required(),
-      password: Joi.string().required(),
-      fullName: Joi.string().required()
-    })
-  ),
-  ah(async (req, res) => {
-    const { email, password, ...restData } = req.body;
-
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser)
-      throw new ApplicationError(
-        "Email already registered",
-        StatusCodes.CONFLICT,
-        "email_taken"
-      );
-
-    const passwordHash = await hashPassword(password);
-
-    let user = new User.create({
-      ...restData,
-      email,
-      passwordHash,
-      role: "user",
-      isVerified: false,
+    return reply(res, {
+      accessToken,
+      user
     });
-
-    user = await user.save();
-
-    return reply(res, user);
   })
 );
- */
 
 function createVerificationToken() {
-  return crypto.randomBytes(48).toString("hex");
+  return crypto.randomBytes(16).toString("hex");
 }
 
 export const createDateAddDaysFromNow = (days: number) => {
@@ -150,8 +115,48 @@ router.post(
       expiresIn: dateFromNow
     }).save();
 
-    mailPresets.verification(email, token);
+    mailPresets.verification(email, token, user.id);
 
     return reply(res);
+  })
+);
+
+router.post(
+  "/auth/verify",
+  bodySchema(
+    Joi.object({
+      userId: Joi.string().required(),
+      token: Joi.string().required()
+    })
+  ),
+  ah(async (req, res) => {
+    const { userId, token } = req.body;
+
+    let verif = await Verification.findOneAndUpdate(
+      {
+        userId,
+        token,
+        used: false
+        // TODO: expires in
+      },
+      { used: true }
+    );
+
+    if (!verif) {
+      throw new NotFound();
+    }
+
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      { isVerified: true },
+      { returnDocument: "after" }
+    );
+
+    let accessToken = await createAccessToken(user);
+
+    return reply(res, {
+      accessToken,
+      user
+    });
   })
 );

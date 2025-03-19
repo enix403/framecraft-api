@@ -23,9 +23,19 @@ POST {{baseUrl}}/temp
 POST {{baseUrl}}/auth/sign-up
 
 {
-  "email": "user5@gmail.com",
+  "email": "user50@gmail.com",
   "password": "pass",
   "fullName": "User 4"
+}
+
+###
+# -------------------------
+# @name CmdVerify
+POST {{baseUrl}}/auth/verify
+
+{
+  "userId": "67da7b1466769157950b8673",
+  "token": "2ce28f7ad3706219f2ad39b5addf96ba"
 }
 
 ###
@@ -44,35 +54,5 @@ POST {{baseUrl}}/auth/login
 # ==================================
 # ==================================
 # ==================================
-# ==================================
-# ==================================
 
-# ###
-# # -------------------------
-# GET {{baseUrl}}/chat/conversations
-# Authorization: Bearer {{accessToken}}
-
-# ###
-# # -------------------------
-# POST {{baseUrl}}/chat/resume-conv-single
-# Authorization: Bearer {{accessToken}}
-
-# {
-#   "receiverId": "675586fdcbfc42693c7971c1"
-# }
-
-
-# ###
-# # -------------------------
-# # @name CmdUploadImage
-# POST {{baseUrl}}/upload/image2
-# Authorization: Bearer {{accessToken}}
-# Content-Type: multipart/form-data; boundary=MfnBoundry
-
-# --MfnBoundry
-# Content-Disposition: form-data; name="image"; filename="test-image.jpg"
-# Content-Type: image/jpeg
-
-# < ./test-image.jpg
-# --MfnBoundry--
 

@@ -32,12 +32,12 @@ const mailer = new Email({
 });
 
 export const mailPresets = {
-  verification: (email: string, token: string) =>
+  verification: (email: string, token: string, userId: string) =>
     mailer
       .send({
         template: "verification",
         message: { to: email },
-        locals: { token }
+        locals: { token, userId }
       })
       .then(() => {
         appLogger.info(`Mail "verification" sent to "${email}"`);
