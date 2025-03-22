@@ -70,6 +70,11 @@ POST {{baseUrl}}/auth/forget-password/set
 
 ###
 # -------------------------
+# @name CmdPlanGet
+GET {{baseUrl}}/plan/67df21ee4aea55a870907bee
+
+###
+# -------------------------
 # @name CmdPlanGenerate
 POST {{baseUrl}}/plan/generate
 

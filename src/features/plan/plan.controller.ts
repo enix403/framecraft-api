@@ -43,8 +43,7 @@ router.add(
     }
   },
   async (req, res) => {
-    appLogger.info("Generating Plan:");
-    appLogger.info(req.body);
+    appLogger.info("Generating Plan");
 
     const canvasData = generateCanvasData(req.body);
 
@@ -61,7 +60,8 @@ router.add(
     }).save();
 
     return reply(res, {
-      plan, planCanvas
+      plan,
+      planCanvas
     });
   }
 );
@@ -77,7 +77,7 @@ router.add(
     }
   },
   async (req, res) => {
-    const plan = await Plan.findById(req.params.planId);
+    const plan = await Plan.findById(req.params.planId).populate("canvas");
     if (!plan) throw new NotFound();
     return reply(res, plan);
   }
