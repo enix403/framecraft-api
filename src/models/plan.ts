@@ -26,19 +26,28 @@ const PlanSchema = new Schema<IPlan>(
     plotLength: { type: Number, required: true },
     plotMeasureUnit: { type: String, required: true },
     layout: {
-      nodes: [{ name: String, typeId: Number }],
-      edges: [[Number, Number]],
+      nodes: [
+        {
+          label: String,
+          typeId: Number,
+          position: {
+            x: Number,
+            y: Number,
+          }
+        }
+      ],
+      edges: [[Number, Number]]
     },
     settings: {
       unit: { type: String, required: true },
       enableWallMeasure: { type: Boolean, required: true, default: true },
-      enableRoomLabels: { type: Boolean, required: true, default: true },
-    },
+      enableRoomLabels: { type: Boolean, required: true, default: true }
+    }
   },
   {
     timestamps: true,
     toObject: { virtuals: true },
-    toJSON: { virtuals: true },
+    toJSON: { virtuals: true }
   }
 );
 
@@ -70,15 +79,14 @@ const PlanCanvasSchema = new Schema<IPlanCanvas>(
       scale: Schema.Types.Mixed,
       rooms: Schema.Types.Mixed,
       walls: Schema.Types.Mixed,
-      doors: Schema.Types.Mixed,
-    },
+      doors: Schema.Types.Mixed
+    }
   },
   {
     timestamps: true,
     toObject: { virtuals: true },
-    toJSON: { virtuals: true },
+    toJSON: { virtuals: true }
   }
 );
-
 
 export const PlanCanvas = model<IPlanCanvas>("PlanCanvas", PlanCanvasSchema);

@@ -71,7 +71,7 @@ POST {{baseUrl}}/auth/forget-password/set
 ###
 # -------------------------
 # @name CmdPlanGet
-GET {{baseUrl}}/plan/67df21ee4aea55a870907bee
+GET {{baseUrl}}/plan/67df2b58b59c21428547ed07
 
 ###
 # -------------------------
@@ -87,17 +87,26 @@ POST {{baseUrl}}/plan/generate
     "nodes": [
       {
         "label": "Front Door Entrance",
-        "typeId": 14
+        "typeId": 14,
+        "position": {
+          "x": 0,
+          "y": 0
+        }
       },
       {
         "label": "Main Living Room",
-        "typeId": 0
+        "typeId": 0,
+        "position": {
+          "x": 220,
+          "y": -180
+        }
       }
     ],
     "edges": [
-      [0, 1]
+      [
+        0,
+        1
+      ]
     ]
   }
 }
-
-
