@@ -8,6 +8,8 @@ import { customJoi } from "@/middleware/validation";
 import { DisposableToken } from "@/models/disposable-token";
 import { User } from "@/models/user";
 
+import { hashPassword } from "../auth/hashing";
+
 export const router = new ApiRouter({
   defaultTags: ["Health & Monitoring"]
 });
@@ -31,8 +33,15 @@ router.add(
     method: "POST"
   },
   async (req, res) => {
-    await User.deleteMany({});
-    await DisposableToken.deleteMany({});
+    // await User.deleteMany({});
+    // await DisposableToken.deleteMany({});
+
+    await User.updateMany(
+      {},
+      {
+        passwordHash: await hashPassword("pass")
+      }
+    );
 
     return reply(res, { ok: true });
   }

@@ -12,7 +12,7 @@ export const customJoi = {
 
 export function validateJoiSchema(value: any, schema: Joi.ObjectSchema) {
   try {
-    Joi.assert(value, schema);
+    Joi.assert(value, schema, { presence: "required" });
   } catch (err) {
     if (err instanceof ValidationError) {
       throw new JoiValidationError(err.details);

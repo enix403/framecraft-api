@@ -68,3 +68,31 @@ POST {{baseUrl}}/auth/forget-password/set
 }
 
 
+###
+# -------------------------
+# @name CmdPlanGenerate
+POST {{baseUrl}}/plan/generate
+
+{
+  "name": "My Plan 16",
+  "plotWidth": 100,
+  "plotLength": 116,
+  "plotMeasureUnit": "ft",
+  "layout": {
+    "nodes": [
+      {
+        "label": "Front Door Entrance",
+        "typeId": 14
+      },
+      {
+        "label": "Main Living Room",
+        "typeId": 0
+      }
+    ],
+    "edges": [
+      [0, 1]
+    ]
+  }
+}
+
+
