@@ -18,18 +18,6 @@ import { appLogger } from "./logger";
 dotenv.config();
 
 /**
- * Validates if a value is a boolean or a string representation of a boolean.
- * @param x - The value to validate.
- * @returns `true` if the value is a boolean or a string representation of `true`, otherwise `false`.
- */
-function validateBoolean(x: unknown): boolean {
-  if (typeof x === "string" && x.toLowerCase() === "true") {
-    return true;
-  }
-  return false;
-}
-
-/**
  * Retrieves an environment variable.
  * @param key - The environment variable key.
  * @returns The environment variable value as a string or `null` if not found.
@@ -60,6 +48,16 @@ function getEnv<T>(key: string, fallback?: T): string | T | null {
   }
 
   return result;
+}
+
+function toBool(x: unknown): boolean {
+  if (
+    (typeof x === "boolean" && x === true) ||
+    (typeof x === "string" && x.toLowerCase() === "true")
+  ) {
+    return true;
+  }
+  return false;
 }
 
 let hasMissing = false;
@@ -99,7 +97,11 @@ export const appEnv = {
   MAIL_HOST: requireEnv("MAIL_HOST"),
   MAIL_PORT: +requireEnv("MAIL_PORT"),
   MAIL_USER: requireEnv("MAIL_USER"),
-  MAIL_PASS: requireEnv("MAIL_PASS")
+  MAIL_PASS: requireEnv("MAIL_PASS"),
+  // MISC
+  REQUIRED_SIGN_UP_VERIFICATION: toBool(
+    getEnv("REQUIRED_SIGN_UP_VERIFICATION", true)
+  )
 };
 
 if (hasMissing) {

@@ -32,7 +32,7 @@ const PlanSchema = new Schema<IPlan>(
           typeId: Number,
           position: {
             x: Number,
-            y: Number,
+            y: Number
           }
         }
       ],

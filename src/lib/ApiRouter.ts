@@ -4,8 +4,8 @@ import {
   Request,
   Response
 } from "express";
+import catchAsync from "express-async-handler";
 import { ObjectSchema } from "joi";
-import catchAsync from 'express-async-handler';
 
 import { bodySchema, paramSchema, querySchema } from "@/middleware/validation";
 

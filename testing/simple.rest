@@ -21,7 +21,7 @@ POST {{baseUrl}}/auth/sign-up
 {
   "email": "user1@gmail.com",
   "password": "pass",
-  "fullName": "Halo"
+  "fullName": "User 1"
 }
 
 ###
@@ -41,7 +41,7 @@ POST {{baseUrl}}/auth/login
 
 {
   "email": "user1@gmail.com",
-  "password": "pass2"
+  "password": "pass"
 }
 
 ###

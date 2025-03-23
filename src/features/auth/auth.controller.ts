@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import Joi from "joi";
 
 import { ApiRouter } from "@/lib/ApiRouter";
+import { appEnv } from "@/lib/app-env";
 import { reply } from "@/lib/app-reply";
 import { ApplicationError, NotFound } from "@/lib/errors";
 
@@ -99,7 +100,12 @@ router.add(
       ...restData,
       email,
       passwordHash,
-      role: "user"
+      role: "user",
+      ...(!appEnv.REQUIRED_SIGN_UP_VERIFICATION
+        ? {
+            isVerified: true
+          }
+        : {})
     }).save();
 
     const tokenRecord = await tokenService.createDisposable({
@@ -110,7 +116,7 @@ router.add(
 
     mailPresets.verification(email, tokenRecord.token, user.id);
 
-    return reply(res);
+    return reply(res, user);
   }
 );
 
@@ -220,7 +226,7 @@ router.add(
     return reply(res, {
       userId: record.user.id,
       userEmail: record.user.email,
-      token,
+      token
     });
   }
 );
