@@ -12,6 +12,9 @@ Authorization: Bearer {{accessToken}}
 POST {{baseUrl}}/temp
 
 # ==================================
+# ==================================
+# ==================================
+# ==================================
 
 ###
 # -------------------------
@@ -68,15 +71,16 @@ POST {{baseUrl}}/auth/forget-password/set
 }
 
 
-###
-# -------------------------
-# @name CmdPlanGet
-GET {{baseUrl}}/plan/67df2b58b59c21428547ed07
+# ==================================
+# ==================================
+# ==================================
+# ==================================
 
 ###
 # -------------------------
 # @name CmdPlanGenerate
 POST {{baseUrl}}/plan/generate
+Authorization: Bearer {{accessToken}}
 
 {
   "name": "My Plan 16",
@@ -110,3 +114,16 @@ POST {{baseUrl}}/plan/generate
     ]
   }
 }
+
+###
+# -------------------------
+# @name CmdPlanGet
+GET {{baseUrl}}/plan/67e0485c5f62caf40d9e4beb
+Authorization: Bearer {{accessToken}}
+
+
+###
+# -------------------------
+# @name CmdPlanGetAll
+GET {{baseUrl}}/plan/all
+Authorization: Bearer {{accessToken}}

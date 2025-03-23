@@ -6,6 +6,8 @@ import { reply } from "@/lib/app-reply";
 import { ApplicationError, NotFound } from "@/lib/errors";
 import { appLogger } from "@/lib/logger";
 
+import { authGuard } from "@/guards/auth.guard";
+
 import { customJoi } from "@/middleware/validation";
 
 import { Plan, PlanCanvas } from "@/models/plan";
@@ -44,14 +46,16 @@ router.add(
           )
         })
       })
-    }
+    },
+    middlewares: [authGuard()]
   },
   async (req, res) => {
-    appLogger.info("Generating Plan");
+    const userId = req.user.id;
 
     const canvasData = generateCanvasData(req.body);
 
     const plan = await new Plan({
+      userId,
       ...req.body,
       settings: {
         unit: req.body.plotMeasureUnit
@@ -59,6 +63,7 @@ router.add(
     }).save();
 
     const planCanvas = await new PlanCanvas({
+      userId,
       planId: plan._id,
       canvasData
     }).save();
@@ -72,16 +77,37 @@ router.add(
 
 router.add(
   {
+    path: "/all",
+    method: "GET",
+    schema: {
+      /* TODO sort and filter */
+    },
+    middlewares: [authGuard()]
+  },
+  async (req, res) => {
+    const plans = await Plan.find({
+      userId: req.user.id
+    }).populate("canvas");
+    return reply(res, plans);
+  }
+);
+
+router.add(
+  {
     path: "/:planId",
     method: "GET",
     schema: {
       params: Joi.object({
         planId: customJoi.id()
       })
-    }
+    },
+    middlewares: [authGuard()]
   },
   async (req, res) => {
-    const plan = await Plan.findById(req.params.planId).populate("canvas");
+    const plan = await Plan.findOne({
+      _id: req.params.planId,
+      userId: req.user.id
+    }).populate("canvas");
     if (!plan) throw new NotFound();
     return reply(res, plan);
   }
@@ -111,11 +137,15 @@ router.add(
           enableRoomLabels: Joi.boolean()
         })
       }).or("name", "layout", "settings")
-    }
+    },
+    middlewares: [authGuard()]
   },
   async (req, res) => {
-    const updatedPlan = await Plan.findByIdAndUpdate(
-      req.params.planId,
+    const updatedPlan = await Plan.findOneAndUpdate(
+      {
+        _id: req.params.planId,
+        userId: req.user.id
+      },
       { $set: req.body },
       { new: true, runValidators: true }
     );
@@ -135,11 +165,15 @@ router.add(
       body: Joi.object({
         canvasData: Joi.object()
       })
-    }
+    },
+    middlewares: [authGuard()]
   },
   async (req, res) => {
-    const updatedCanvas = await PlanCanvas.findByIdAndUpdate(
-      req.params.canvasId,
+    const updatedCanvas = await PlanCanvas.findOneAndUpdate(
+      {
+        _id: req.params.canvasId,
+        userId: req.user.id
+      },
       { $set: req.body },
       { new: true, runValidators: true }
     );

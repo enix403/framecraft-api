@@ -1,6 +1,7 @@
 import { Document, Schema, Types, model } from "mongoose";
 
 export interface IPlan extends Document<Types.ObjectId> {
+  userId: Types.ObjectId;
   name: string;
   plotWidth: number;
   plotLength: number;
@@ -21,6 +22,11 @@ export interface IPlan extends Document<Types.ObjectId> {
 
 const PlanSchema = new Schema<IPlan>(
   {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
     name: { type: String, required: true },
     plotWidth: { type: Number, required: true },
     plotLength: { type: Number, required: true },
@@ -61,6 +67,7 @@ PlanSchema.virtual("canvas", {
 export const Plan = model<IPlan>("Plan", PlanSchema);
 
 export interface IPlanCanvas extends Document<Types.ObjectId> {
+  userId: Types.ObjectId;
   planId: Types.ObjectId;
   canvasData: {
     shape: any;
@@ -73,6 +80,11 @@ export interface IPlanCanvas extends Document<Types.ObjectId> {
 
 const PlanCanvasSchema = new Schema<IPlanCanvas>(
   {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
     planId: { type: Schema.Types.ObjectId, ref: "Plan", required: true },
     canvasData: {
       shape: Schema.Types.Mixed,
