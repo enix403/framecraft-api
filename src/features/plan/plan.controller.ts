@@ -52,7 +52,7 @@ router.add(
   async (req, res) => {
     const userId = req.user.id;
 
-    const canvasData = generateCanvasData(req.body);
+    const canvasData = await generateCanvasData(req.body.layout);
 
     const plan = await new Plan({
       userId,
