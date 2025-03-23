@@ -6,6 +6,8 @@ import { appEnv } from "@/lib/app-env";
 import { reply } from "@/lib/app-reply";
 import { ApplicationError, NotFound } from "@/lib/errors";
 
+import { authGuard } from "@/guards/auth.guard";
+
 import { customJoi } from "@/middleware/validation";
 
 import { DisposableTokenKind } from "@/models/disposable-token";
@@ -270,5 +272,25 @@ router.add(
     }
 
     return reply(res);
+  }
+);
+
+/* ========================= */
+
+router.add(
+  {
+    path: "/me",
+    method: "GET",
+    summary: "Get the current logged in user",
+    middlewares: [authGuard()]
+  },
+  async (req, res) => {
+    let user = await User.findById(req.user.id);
+
+    if (!user) {
+      throw new NotFound();
+    }
+
+    return reply(res, user);
   }
 );

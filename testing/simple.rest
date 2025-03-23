@@ -50,6 +50,13 @@ POST {{baseUrl}}/auth/login
 ###
 @accessToken = {{CmdLogin.response.body.$.accessToken}}
 
+
+###
+# -------------------------
+# @name CmdGetMe
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{accessToken}}
+
 ###
 # -------------------------
 # @name CmdForgetInit
