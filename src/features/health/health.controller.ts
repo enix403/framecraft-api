@@ -34,8 +34,8 @@ router.add(
     method: "POST"
   },
   async (req, res) => {
-    await User.deleteMany({});
-    await DisposableToken.deleteMany({});
+    // await User.deleteMany({});
+    // await DisposableToken.deleteMany({});
     await Plan.deleteMany({});
     await PlanCanvas.deleteMany({});
 

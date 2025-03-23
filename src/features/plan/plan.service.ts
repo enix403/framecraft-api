@@ -45,8 +45,9 @@ export async function generateCanvasData(layout: any): Promise<any> {
       );
     }
 
-    const data = await response.json();
-    console.log("Response from Flask:", data);
+    const canvasData = await response.json();
+    return canvasData;
+    // console.log("Response from Flask:", data);
   } catch (error) {
     throw new ApplicationError(
       "Failed to generate plan [/]",
