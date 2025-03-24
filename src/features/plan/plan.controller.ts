@@ -87,7 +87,9 @@ router.add(
   async (req, res) => {
     const plans = await Plan.find({
       userId: req.user.id
-    }).populate("canvas");
+    })
+      .sort({ createdAt: -1 })
+      .populate("canvas");
     return reply(res, plans);
   }
 );
