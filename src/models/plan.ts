@@ -35,7 +35,7 @@ const PlanSchema = new Schema<IPlan>(
       nodes: [
         {
           label: String,
-          typeId: String,
+          typeId: Number,
           position: {
             x: Number,
             y: Number
