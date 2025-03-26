@@ -34,7 +34,7 @@ router.add(
           nodes: Joi.array().items(
             Joi.object({
               label: Joi.string(),
-              typeId: Joi.number().integer(),
+              typeId: Joi.string(),
               position: Joi.object({
                 x: Joi.number(),
                 y: Joi.number()
