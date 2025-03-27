@@ -9,6 +9,19 @@ export interface IUser extends Document<Types.ObjectId> {
   fullName: string;
   isActive: boolean;
   isVerified: boolean;
+
+  /* ====== Optional profile fields ====== */
+
+  bio?: string;
+  gender?: "male" | "female";
+  dateOfBirth?: Date;
+  phoneCountryCode?: string;
+  phoneNumber?: string;
+
+  addressCountry?: string;
+  addressCity?: string;
+  addressArea?: string;
+  addressZip?: string;
 }
 
 const userSchema = new Schema<IUser>(
@@ -23,9 +36,23 @@ const userSchema = new Schema<IUser>(
 
     fullName: { type: String, required: true },
     isActive: { type: Boolean, default: true },
-    isVerified: { type: Boolean, default: false }
+    isVerified: { type: Boolean, default: false },
+
+    /* ======= */
+
+    bio: { type: String },
+    gender: { type: String },
+    dateOfBirth: { type: String },
+    phoneCountryCode: { type: String },
+    phoneNumber: { type: String },
+
+    addressCountry: { type: String },
+    addressCity: { type: String },
+    addressArea: { type: String },
+    addressZip: { type: String },
   },
   {
+    timestamps: true,
     toObject: { virtuals: true },
     toJSON: {
       virtuals: true,
@@ -37,11 +64,5 @@ const userSchema = new Schema<IUser>(
     }
   }
 );
-
-// userSchema.virtual("verifications", {
-//   ref: "Verification",
-//   localField: "_id",
-//   foreignField: "userId",
-// });
 
 export const User = model("User", userSchema);
