@@ -17,6 +17,7 @@
     "^@/contracts/",
     "^@/guards/",
     "^@/middleware/",
+    "^@/datasources/",
     "^@/models/",
     "^@/mailer/",
     "^@/features/",
