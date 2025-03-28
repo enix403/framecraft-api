@@ -34,38 +34,39 @@ export function buildSwaggerSpec(apiRouter: ApiRouter) {
               )
             : [];
 
-          acc[swaggerPath] = {
-            [route.method.toLowerCase()]: {
-              summary: route.summary,
-              description: route.desc,
-              tags: route.tags,
-              parameters: [
-                ...(route.schema?.params
-                  ? [
-                      {
-                        in: "path",
-                        schema: joiToSwagger(route.schema.params).swagger
-                      }
-                    ]
-                  : []),
-                ...queryParameters
-              ],
-              requestBody: route.schema?.body
-                ? {
-                    content: {
-                      "application/json": {
-                        schema: joiToSwagger(route.schema.body).swagger
-                      }
+          let routeEntry = {
+            summary: route.summary,
+            description: route.desc,
+            tags: route.tags,
+            parameters: [
+              ...(route.schema?.params
+                ? [
+                    {
+                      in: "path",
+                      schema: joiToSwagger(route.schema.params).swagger
+                    }
+                  ]
+                : []),
+              ...queryParameters
+            ],
+            requestBody: route.schema?.body
+              ? {
+                  content: {
+                    "application/json": {
+                      schema: joiToSwagger(route.schema.body).swagger
                     }
                   }
-                : undefined,
-              responses: {
-                [StatusCodes.OK]: {
-                  description: "Success"
                 }
+              : undefined,
+            responses: {
+              [StatusCodes.OK]: {
+                description: "Success"
               }
             }
           };
+
+          let pathObj = (acc[swaggerPath] = acc[swaggerPath] || {});
+          pathObj[route.method.toLowerCase()] = routeEntry;
           return acc;
         },
         {} as Record<string, any>
