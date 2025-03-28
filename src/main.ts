@@ -14,7 +14,6 @@ import cors from "cors";
 import express from "express";
 import http from "http";
 import { StatusCodes } from "http-status-codes";
-import mongoose from "mongoose";
 import morgan from "morgan";
 import PrettyError from "pretty-error";
 
@@ -24,6 +23,7 @@ import { appLogger } from "@/lib/logger";
 
 import { createRootApiRouter } from "@/features/routes";
 
+import { connectMongoDB } from "./datasources/mongodb";
 import { buildSwaggerSpec, swaggerDocs } from "./swagger";
 
 export type ServerBind =
@@ -56,17 +56,6 @@ export function getBind(): ServerBind {
   }
 
   throw new Error(`Invalid value for env variable \`PORT\`: ${val}`);
-}
-
-async function connectMongoDB() {
-  try {
-    appLogger.verbose("Connecting to MongoDB ...");
-    await mongoose.connect(appEnv.MONGO_URL ?? "");
-    appLogger.verbose(green("Connected successfully to MongoDB instance"));
-  } catch (error) {
-    appLogger.error(red("Connection to MongoDB instance failed"));
-    throw error;
-  }
 }
 
 function methodColors(method: string) {
