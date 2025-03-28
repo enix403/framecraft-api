@@ -8,7 +8,7 @@ import { connectMongoDB } from "@/datasources/mongodb";
 const seedDatabase = async () => {
   await User.deleteMany({});
 
-  const users = Array.from({ length: 10 }).map((_, index) => {
+  const users = Array.from({ length: 47 }).map((_, index) => {
     const email = `user${index + 1}@gmail.com`;
     return {
       email,

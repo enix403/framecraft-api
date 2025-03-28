@@ -104,7 +104,7 @@ router.add(
 router.add(
   {
     path: "/:id",
-    method: "PUT",
+    method: "PATCH",
     summary: "Update user details",
     desc: "Updates a user with new details.",
     schema: {

@@ -41,7 +41,10 @@ const userSchema = new Schema<IUser>(
     /* ======= */
 
     bio: { type: String },
-    gender: { type: String },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+    },
     dateOfBirth: { type: String },
     phoneCountryCode: { type: String },
     phoneNumber: { type: String },
