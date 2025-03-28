@@ -1,7 +1,4 @@
-import "./repl-effects";
-
 /* ========================== */
-
 import { appEnv } from "@/lib/app-env";
 import { appLogger } from "@/lib/logger";
 
@@ -20,39 +17,23 @@ import { tokenService } from "@/features/auth/token.service";
 
 /* ========================== */
 
-async function bootstrap() {
-  try {
-    const timeout = 100;
-    await connectMongoDB({
-      timeoutMS: timeout,
-      socketTimeoutMS: timeout,
-      connectTimeoutMS: timeout,
-      waitQueueTimeoutMS: timeout,
-      serverSelectionTimeoutMS: timeout
-    });
-  } catch (error) {
-    // ignore if cannot connect
-  }
+const timeout = 100;
+connectMongoDB({
+  timeoutMS: timeout,
+  socketTimeoutMS: timeout,
+  connectTimeoutMS: timeout,
+  waitQueueTimeoutMS: timeout,
+  serverSelectionTimeoutMS: timeout
+}).finally(console.clear);
 
-  console.log("TypeScript REPL started\n");
-
-  // Start the REPL
-  const r = require("repl").start({
-    prompt: "\x1b[34m>>\x1b[0m ",
-    useGlobal: true
-  });
-
-  // Define custom REPL commands
-  r.defineCommand("cls", {
-    help: "Clears the screen",
-    action() {
-      console.clear();
-      this.displayPrompt();
-    }
-  });
-
-  r.on("exit", () => {
-    process.exit();
-  });
-}
-bootstrap();
+globalThis.appEnv = appEnv;
+globalThis.appLogger = appLogger;
+globalThis.validateJoiSchema = validateJoiSchema;
+globalThis.connectMongoDB = connectMongoDB;
+globalThis.DisposableToken = DisposableToken;
+globalThis.Plan = Plan;
+globalThis.User = User;
+globalThis.mailPresets = mailPresets;
+globalThis.comparePassword = comparePassword;
+globalThis.hashPassword = hashPassword;
+globalThis.tokenService = tokenService;
