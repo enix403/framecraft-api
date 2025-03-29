@@ -158,3 +158,22 @@ Authorization: Bearer {{accessToken}}
 # @name CmdPlanGetAll
 GET {{baseUrl}}/plan/all
 Authorization: Bearer {{accessToken}}
+
+###
+# -------------------------
+DELETE {{baseUrl}}/users/batch-delete
+
+{
+  "ids": [
+    "67e68f55042c81734f1d4d93",
+    "67e68f55042c81734f1d4d94",
+    "67e68f55042c81734f1d4d9b",
+    "67e68f55042c81734f1d4d9e",
+    "67e68f55042c81734f1d4da0",
+    "67e68f55042c81734f1d4da6",
+    "67e68f55042c81734f1d4da9",
+    "67e68f55042c81734f1d4dab",
+    "67e68f55042c81734f1d4db5",
+    "67e68f55042c81734f1d4d8a"
+  ]
+}

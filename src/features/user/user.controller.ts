@@ -6,6 +6,7 @@ import { reply } from "@/lib/app-reply";
 import { ApplicationError, NotFound } from "@/lib/errors";
 
 import { User } from "@/models/user";
+import { customJoi } from "@/middleware/validation";
 
 export const router = new ApiRouter({
   pathPrefix: "/users",
@@ -149,6 +150,28 @@ router.add(
   }
 );
 
+// Batch delete users
+router.add(
+  {
+    path: "/batch-delete",
+    method: "DELETE",
+    summary: "Batch delete users",
+    desc: "Deletes multiple users by their IDs.",
+    schema: {
+      body: Joi.object({
+        ids: Joi.array().items(customJoi.id())
+      })
+    }
+  },
+  async (req, res) => {
+    const { ids } = req.body;
+    const result = await User.deleteMany({ _id: { $in: ids } });
+    return reply(res, {
+      message: `${result.deletedCount} users deleted successfully`
+    });
+  }
+);
+
 // Delete a user
 router.add(
   {
@@ -167,26 +190,5 @@ router.add(
   }
 );
 
-// Batch delete users
-router.add(
-  {
-    path: "/batch-delete",
-    method: "POST",
-    summary: "Batch delete users",
-    desc: "Deletes multiple users by their IDs.",
-    schema: {
-      body: Joi.object({
-        ids: Joi.array().items(Joi.string().required()).required()
-      })
-    }
-  },
-  async (req, res) => {
-    const { ids } = req.body;
-    const result = await User.deleteMany({ _id: { $in: ids } });
-    return reply(res, {
-      message: `${result.deletedCount} users deleted successfully`
-    });
-  }
-);
 
 export default router;
