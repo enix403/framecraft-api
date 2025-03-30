@@ -5,8 +5,9 @@ import { ApiRouter } from "@/lib/ApiRouter";
 import { reply } from "@/lib/app-reply";
 import { ApplicationError, NotFound } from "@/lib/errors";
 
-import { User } from "@/models/user";
 import { customJoi } from "@/middleware/validation";
+
+import { User } from "@/models/user";
 
 export const router = new ApiRouter({
   pathPrefix: "/users",
@@ -67,40 +68,6 @@ router.add(
   }
 );
 
-// Create a new user
-// router.add(
-//   {
-//     path: "/",
-//     method: "POST",
-//     summary: "Create a new user",
-//     desc: "Creates a new user with provided details.",
-//     schema: {
-//       body: Joi.object({
-//         email: Joi.string().email().required(),
-//         passwordHash: Joi.string().required(),
-//         fullName: Joi.string().required(),
-//         role: Joi.string().valid("admin", "user").required(),
-//         isActive: Joi.boolean(),
-//         isVerified: Joi.boolean(),
-//         bio: Joi.string().optional(),
-//         gender: Joi.string().valid("male", "female").optional(),
-//         dateOfBirth: Joi.date().optional(),
-//         phoneCountryCode: Joi.string().optional(),
-//         phoneNumber: Joi.string().optional(),
-//         addressCountry: Joi.string().optional(),
-//         addressCity: Joi.string().optional(),
-//         addressArea: Joi.string().optional(),
-//         addressZip: Joi.string().optional(),
-//       }),
-//     },
-//   },
-//   async (req, res) => {
-//     const user = new User(req.body);
-//     await user.save();
-//     return reply(res, user);
-//   }
-// );
-
 // Update a user
 router.add(
   {
@@ -111,11 +78,9 @@ router.add(
     schema: {
       params: Joi.object({ id: Joi.string().required() }),
       body: Joi.object({
-        email: Joi.string().email().optional(),
         fullName: Joi.string().optional(),
         role: Joi.string().valid("admin", "user").optional(),
         isActive: Joi.boolean().optional(),
-        isVerified: Joi.boolean().optional(),
         bio: Joi.string().optional(),
         gender: Joi.string().valid("male", "female").optional(),
         dateOfBirth: Joi.date().optional(),
@@ -125,11 +90,16 @@ router.add(
         addressCity: Joi.string().optional(),
         addressArea: Joi.string().optional(),
         addressZip: Joi.string().optional()
-      })
+      }).unknown(true)
     }
   },
   async (req, res) => {
-    const { email } = req.body;
+    const updates = req.body;
+
+    delete updates["email"];
+    delete updates["isVerified"];
+
+    const { email } = updates;
 
     if (email) {
       const existingUser = await User.findOne({ email });
@@ -142,7 +112,7 @@ router.add(
       }
     }
 
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const user = await User.findByIdAndUpdate(req.params.id, updates, {
       new: true
     });
     if (!user) throw new NotFound();
@@ -189,6 +159,5 @@ router.add(
     return reply(res, { message: "User deleted successfully" });
   }
 );
-
 
 export default router;

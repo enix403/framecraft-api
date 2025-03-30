@@ -159,6 +159,11 @@ Authorization: Bearer {{accessToken}}
 GET {{baseUrl}}/plan/all
 Authorization: Bearer {{accessToken}}
 
+
+###
+# -------------------------
+GET {{baseUrl}}/users
+
 ###
 # -------------------------
 DELETE {{baseUrl}}/users/batch-delete
