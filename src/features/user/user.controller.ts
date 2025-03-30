@@ -94,6 +94,7 @@ router.add(
     }
   },
   async (req, res) => {
+    // throw new ApplicationError("adwa");
     const updates = req.body;
 
     delete updates["email"];
