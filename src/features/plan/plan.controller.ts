@@ -125,21 +125,12 @@ router.add(
       }),
       body: Joi.object({
         name: Joi.string().optional(),
-        layout: Joi.object({
-          nodes: Joi.array().items(
-            Joi.object({
-              label: Joi.string(),
-              typeId: Joi.number().integer()
-            })
-          )
-        }).optional(),
         settings: Joi.object({
           unit: Joi.string(),
           enableWallMeasure: Joi.boolean(),
           enableRoomLabels: Joi.boolean()
         }).optional()
       })
-      // .or("name", "layout", "settings")
     },
     middlewares: [authGuard()]
   },
