@@ -146,15 +146,25 @@ Authorization: Bearer {{accessToken}}
   }
 }
 
-###
-# -------------------------
-# @name CmdPlanGet
-GET {{baseUrl}}/plan/67e077d384f6e65101957807
-Authorization: Bearer {{accessToken}}
-
 
 ###
 # -------------------------
 # @name CmdPlanGetAll
 GET {{baseUrl}}/plan/all
 Authorization: Bearer {{accessToken}}
+
+###
+# -------------------------
+# @name CmdPlanGet
+GET {{baseUrl}}/plan/67f153c11815e2a4ba528eee
+Authorization: Bearer {{accessToken}}
+
+###
+# -------------------------
+# @name CmdUpdatePlan
+POST {{baseUrl}}/plan/67f153c11815e2a4ba528eee
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "Cool Plan 2"
+}

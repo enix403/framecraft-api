@@ -124,7 +124,7 @@ router.add(
         planId: customJoi.id()
       }),
       body: Joi.object({
-        name: Joi.string(),
+        name: Joi.string().optional(),
         layout: Joi.object({
           nodes: Joi.array().items(
             Joi.object({
@@ -132,13 +132,14 @@ router.add(
               typeId: Joi.number().integer()
             })
           )
-        }),
+        }).optional(),
         settings: Joi.object({
           unit: Joi.string(),
           enableWallMeasure: Joi.boolean(),
           enableRoomLabels: Joi.boolean()
-        })
-      }).or("name", "layout", "settings")
+        }).optional()
+      })
+      // .or("name", "layout", "settings")
     },
     middlewares: [authGuard()]
   },
@@ -152,7 +153,7 @@ router.add(
       { new: true, runValidators: true }
     );
     if (!updatedPlan) throw new NotFound();
-    return reply(res, updatedPlan);
+    return reply(res);
   }
 );
 
