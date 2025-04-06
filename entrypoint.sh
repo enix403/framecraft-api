@@ -17,4 +17,5 @@ exec env \
   APP_NAME="FrameCraft" \
   APP_VERSION="1.0.0" \
   MODEL_SERVICE_URL="http://localhost:3002" \
+  PORT=3000 \
   pnpm start
