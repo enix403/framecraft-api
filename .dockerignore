@@ -1,23 +1,28 @@
-# ----------
-# repo .gitignore
+/.git/
+
+# blueprint
+
+/blueprint/_old/
+/blueprint/data/
+/blueprint/*.ipynb
 
 .ipynb_checkpoints
-dump
-.venv
-
-*.pth
-*.png
 *.npy
 *.pyc
-*cache*
-*.txt
-*.jpg
+
+# API
+
+# ----------
+# repo .gitignore
 
 .vscode
 .env
 build/
 uploads/*
 !uploads/.gitkeep
+
+testing/
+/*.txt
 
 # ----------
 # global .gitignore
@@ -48,3 +53,5 @@ lerna-debug.log*
 *.sw?
 
 vol-data.*/
+
+
