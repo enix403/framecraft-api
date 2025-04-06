@@ -137,10 +137,11 @@ function createApp() {
       next: express.NextFunction
     ) => {
       if (err instanceof ApplicationError) {
-        return err.sendResponse(res);
-      }
-
-      if (err) {
+        err.sendResponse(res);
+        if (err.opts.log) {
+          appLogger.error(pe.render(err));
+        }
+      } else if (err) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: "An internal server error occurred" });

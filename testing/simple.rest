@@ -156,7 +156,7 @@ Authorization: Bearer {{accessToken}}
 ###
 # -------------------------
 # @name CmdPlanGet
-GET {{baseUrl}}/plan/67f153c11815e2a4ba528eee
+GET {{baseUrl}}/plan/67f1873f2655f3c4ab88f631
 Authorization: Bearer {{accessToken}}
 
 ###
