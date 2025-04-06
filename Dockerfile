@@ -46,10 +46,30 @@ COPY blueprint/checkpoints ./checkpoints
 COPY blueprint/httpservice ./httpservice
 COPY blueprint/minimal ./minimal
 
-# COPY package.json pnpm-lock.yaml ./
+# ------------------
+# ------------------
 
-# RUN --mount=type=cache,target=/root/.pnpm-store \
-#   \. /root/.nvm/nvm.sh \
-#   && pnpm config set store-dir /root/.pnpm-store \
-#   && pnpm install --frozen-lockfile
+WORKDIR /app
 
+COPY package.json pnpm-lock.yaml ./
+
+RUN --mount=type=cache,target=/root/.pnpm-store \
+  . $NVM_DIR/nvm.sh \
+  && pnpm config set store-dir /root/.pnpm-store \
+  && pnpm install --frozen-lockfile
+
+COPY src ./src
+COPY tsconfig.json .
+
+RUN . $NVM_DIR/nvm.sh \
+  && pnpm build
+
+# ------------------
+# ------------------
+
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
+EXPOSE 3000
+
+CMD ["./entrypoint.sh"]
