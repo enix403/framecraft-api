@@ -1,19 +1,19 @@
-# FrameCraft REST API
+# ⚙️ FrameCraft REST API
 
-This is the backend API for FrameCraft, written in Node.js and TypeScript. It also integrates with the `Blueprint` microservice for ML-based inference.
+This is the backend API for FrameCraft, written in Node.js and TypeScript.
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Clone the repository (including the blueprint submodule)
+### 1. Clone the repository
 
 ```bash
-git clone --recurse-submodules https://github.com/your-username/framecraft-api.git
+git clone --recurse-submodules https://github.com/enix403/framecraft-api
 cd framecraft-api
 ```
 
-If you forgot `--recurse-submodules`, run this after cloning:
+> Or if you've already cloned it:
 
 ```bash
 git submodule update --init --recursive
@@ -35,7 +35,7 @@ python httpservice/httpservice.py
 
 ### 2. Install dependencies
 
-Back in the project root, install the API dependencies using:
+Back in the project root, install the API server dependencies using:
 
 ```bash
 pnpm install
@@ -67,6 +67,19 @@ pnpm run dev
 
 The server will be available at [http://localhost:3001](http://localhost:3001)
 
+### 5. Building the API server
+
+You can build the API server for production using
+
+```bash
+pnpm run build
+```
+
+It will compile the project and generate a `build` folder. This compiled server can be started using
+
+```bash
+pnpm run start
+```
 
 ## 🐳 Optional: Running with Docker
 
@@ -95,3 +108,8 @@ podman run -d -p 3001:3000 \
 The API will be accessible at [http://localhost:3001](http://localhost:3001)
 
 > The `BLUEPRINT_URL` is automatically set internally when using Docker.
+
+## 📁 Submodule: Blueprint
+
+This repo includes the AI model microservice as a Git submodule in the `blueprint/` directory.
+See [`blueprint/README.md`](./blueprint/README.md) for standalone usage and development details.
