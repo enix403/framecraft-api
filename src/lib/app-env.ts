@@ -91,7 +91,7 @@ export const appEnv = {
   JWT_SIGNING_KEY: getEnv("JWT_SIGNING_KEY"),
   // Application
   CLIENT_URL: requireEnv("CLIENT_URL"),
-  MODEL_SERVICE_URL: requireEnv("MODEL_SERVICE_URL"),
+  BLUEPRINT_URL: requireEnv("BLUEPRINT_URL"),
   // Database
   MONGO_URL: requireEnv("MONGO_URL"),
   // Mail

@@ -90,7 +90,7 @@ export async function generateCanvasData(layout: any): Promise<any> {
   };
 
   try {
-    const response = await fetch(appEnv.MODEL_SERVICE_URL + "/generate", {
+    const response = await fetch(appEnv.BLUEPRINT_URL + "/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
