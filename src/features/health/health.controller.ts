@@ -22,8 +22,8 @@ router.add(
   },
   async (req, res) => {
     return reply(res, {
-      live: true,
-      query: req.query
+      live: "yes",
+      query: req.query,
     });
   }
 );
@@ -36,8 +36,8 @@ router.add(
   async (req, res) => {
     // await User.deleteMany({});
     // await DisposableToken.deleteMany({});
-    await Plan.deleteMany({});
-    await PlanCanvas.deleteMany({});
+    // await Plan.deleteMany({});
+    // await PlanCanvas.deleteMany({});
 
     // await User.updateMany(
     //   {},
