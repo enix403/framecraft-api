@@ -29,21 +29,22 @@ const mailer = new Email({
   send: true,
   transport: transport,
   message: {
-    from: "<no-reply@example.com>"
+    from: "<no-reply@framecraft.com>"
   }
 });
 
 export const mailPresets = {
-  verification: (email: string, token: string, userId: string) =>
+  verification: (email: string, userName: string, verifyLink: string) =>
     mailer
       .send({
         template: "verification",
         message: { to: email },
-        locals: { token, userId }
+        locals: { userName, verifyLink }
       })
       .then(() => {
         appLogger.info(`Mail "verification" sent to "${email}"`);
       }),
+
   resetPassword: (email: string, userName: string, resetLink: string) =>
     mailer
       .send({

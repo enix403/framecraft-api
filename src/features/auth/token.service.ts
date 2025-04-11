@@ -102,6 +102,10 @@ export const tokenService = {
     );
   },
 
+  createVerifyLink: (userId: string, token: string) => {
+    return `${appEnv.CLIENT_URL}/auth/verify/${userId}/${token}`;
+  },
+
   createPasswordResetLink: (userId: string, token: string) => {
     return `${appEnv.CLIENT_URL}/auth/reset-password/${userId}/${token}`;
   }

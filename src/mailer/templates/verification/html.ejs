@@ -1,56 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Verify yourself</title>
-
+    <title>Verify Your Account</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-      }
-
       body {
-        -webkit-font-smoothing: antialiased;
-        font-family: sans-serif;
-        font-size: 14px;
-        line-height: 100%;
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%;
-      }
-
-      table {
-        width: 100%;
-        border: none;
-        border-collapse: separate;
-      }
-
-      table tr td {
+        font-family: Arial, sans-serif;
+        background-color: #f5f6fa;
+        color: #333;
         padding: 20px;
-        text-align: center;
+      }
+      .container {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 30px;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 20px;
+        margin-top: 20px;
+        color: #fff;
+        background-color: #28a745;
+        text-decoration: none;
+        border-radius: 4px;
+      }
+      .link {
+        margin-top: 20px;
+        word-break: break-all;
+        background-color: #f1f1f1;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.9em;
+      }
+      .footer {
+        margin-top: 30px;
+        font-size: 0.9em;
+        color: #888;
       }
     </style>
   </head>
-
   <body>
-    <table>
-      <tr>
-        <td>
-          <h1>Verification</h1>
-        </td>
-      </tr>
-      <tr>
-        <td>
-         token = <%=token%>
-        </td>
-      </tr>
-      <tr>
-        <td>
-         userId = <%=userId%>
-        </td>
-      </tr>
-    </table>
+    <div class="container">
+      <h2>Welcome <%= userName %>!</h2>
+
+      <p>Thank you for signing up. To complete your registration, please verify your email address.</p>
+
+      <a href="<%= verifyLink %>" class="btn">Verify Account</a>
+
+      <p>If the button above doesn't work, you can copy and paste the following link into your browser:</p>
+
+      <div class="link"><%= verifyLink %></div>
+
+      <p>If you didn't sign up for this account, please ignore this email.</p>
+
+    </div>
   </body>
 </html>

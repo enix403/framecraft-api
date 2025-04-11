@@ -116,7 +116,13 @@ router.add(
       kind: DisposableTokenKind.Verify
     });
 
-    mailPresets.verification(email, tokenRecord.token, user.id);
+    const userName = user.fullName;
+    const verifyLink = tokenService.createVerifyLink(
+      user.id,
+      tokenRecord.token
+    );
+
+    mailPresets.verification(email, userName, verifyLink);
 
     return reply(res, user);
   }
