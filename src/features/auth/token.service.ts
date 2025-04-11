@@ -100,5 +100,9 @@ export const tokenService = {
         usedAt: new Date()
       }
     );
+  },
+
+  createPasswordResetLink: (userId: string, token: string) => {
+    return `${appEnv.CLIENT_URL}/auth/reset-password/${userId}/${token}`;
   }
 };

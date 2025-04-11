@@ -44,12 +44,12 @@ export const mailPresets = {
       .then(() => {
         appLogger.info(`Mail "verification" sent to "${email}"`);
       }),
-  resetPassword: (email: string, token: string, userId: string) =>
+  resetPassword: (email: string, userName: string, resetLink: string) =>
     mailer
       .send({
         template: "reset-password",
         message: { to: email },
-        locals: { token, userId }
+        locals: { userName, resetLink }
       })
       .then(() => {
         appLogger.info(`Mail "reset-password" sent to "${email}"`);

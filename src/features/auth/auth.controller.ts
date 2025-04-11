@@ -194,7 +194,13 @@ router.add(
         kind: DisposableTokenKind.ResetPassword
       });
 
-      mailPresets.resetPassword(email, tokenRecord.token, user.id);
+      const userName = user.fullName;
+      const resetLink = tokenService.createPasswordResetLink(
+        user.id,
+        tokenRecord.token
+      );
+
+      mailPresets.resetPassword(email, userName, resetLink);
     }
 
     return reply(res);

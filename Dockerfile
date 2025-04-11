@@ -70,6 +70,6 @@ RUN . $NVM_DIR/nvm.sh \
 COPY entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
-EXPOSE 3000
+EXPOSE 80
 
 CMD ["./entrypoint.sh"]

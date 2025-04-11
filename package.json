@@ -8,6 +8,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "rimraf build tsconfig.tsbuildinfo && tsc --incremental false --outDir build",
+    "postbuild": "cpx \"src/mailer/templates/**/*\" \"build/mailer/templates\"",
     "start": "cross-env NODE_ENV=production NODE_OPTIONS=--disable-warning=DEP0174 TS_NODE_BASEURL=./build node -r tsconfig-paths/register build/main.js",
     "dev": "cross-env NODE_ENV=development NODE_OPTIONS=--disable-warning=DEP0174 TS_NODE_BASEURL=./src ts-node-dev -r tsconfig-paths/register --transpile-only --respawn --rs --clear src/main.ts",
     "format": "prettier -uw --cache --ignore-path .prettierignore ."
@@ -47,6 +48,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "cpx": "^1.5.0",
     "prettier": "4.0.0-alpha.12",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
@@ -56,7 +58,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@scarf/scarf",
-      "@swc/core"
+      "@swc/core",
+      "core-js"
     ]
   }
 }
