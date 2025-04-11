@@ -96,7 +96,7 @@ export async function generateCanvasData(layout: any): Promise<any> {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(requestData),
-      signal: AbortSignal.timeout(15 * 60 * 1000 /* 15 min. */)
+      signal: AbortSignal.timeout(20 * 60 * 1000 /* 20 min. */)
     });
 
     if (!response.ok) {
