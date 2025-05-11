@@ -292,6 +292,24 @@ router.add(
 
 /* ========================= */
 
+router.add(
+  {
+    path: "/me",
+    method: "GET",
+    summary: "Get the current logged in user",
+    middlewares: [authGuard()]
+  },
+  async (req, res) => {
+    let user = await User.findById(req.user.id);
+
+    if (!user) {
+      throw new NotFound();
+    }
+
+    return reply(res, user);
+  }
+);
+
 // Update the current user
 router.add(
   {
