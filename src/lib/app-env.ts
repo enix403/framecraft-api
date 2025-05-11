@@ -89,6 +89,9 @@ export const appEnv = {
   APP_VERSION: getEnv("APP_VERSION", "0.0.0"),
   // Jwt
   JWT_SIGNING_KEY: getEnv("JWT_SIGNING_KEY"),
+  // Google Auth
+  GOOGLE_CLIENT_ID: requireEnv("GOOGLE_CLIENT_ID"),
+  GOOGLE_CLIENT_SECRET: requireEnv("GOOGLE_CLIENT_SECRET"),
   // Application
   CLIENT_URL: requireEnv("CLIENT_URL"),
   BLUEPRINT_URL: requireEnv("BLUEPRINT_URL"),
@@ -104,8 +107,8 @@ export const appEnv = {
   MAIL_USER: requireEnv("MAIL_USER"),
   MAIL_PASS: requireEnv("MAIL_PASS"),
   // MISC
-  REQUIRED_SIGN_UP_VERIFICATION: toBool(
-    getEnv("REQUIRED_SIGN_UP_VERIFICATION", true)
+  REQUIRE_SIGN_UP_VERIFICATION: toBool(
+    getEnv("REQUIRE_SIGN_UP_VERIFICATION", true)
   )
 };
 

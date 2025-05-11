@@ -1,5 +1,8 @@
+import type { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import Joi from "joi";
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 import { ApiRouter } from "@/lib/ApiRouter";
 import { appEnv } from "@/lib/app-env";
@@ -103,7 +106,7 @@ router.add(
       email,
       passwordHash,
       role: "user",
-      ...(!appEnv.REQUIRED_SIGN_UP_VERIFICATION
+      ...(!appEnv.REQUIRE_SIGN_UP_VERIFICATION
         ? {
             isVerified: true
           }
@@ -289,20 +292,170 @@ router.add(
 
 /* ========================= */
 
+// Update the current user
 router.add(
   {
     path: "/me",
-    method: "GET",
-    summary: "Get the current logged in user",
+    method: "PATCH",
+    desc: "Updates a user with new details.",
+    schema: {
+      body: Joi.object({
+        fullName: Joi.string().optional(),
+        profilePictureUrl: Joi.string().allow(null).optional(), // <-- allows null for removing avatar
+        bio: Joi.string().optional(),
+        gender: Joi.string().valid("male", "female").optional(),
+        dateOfBirth: Joi.date().optional(),
+        phoneCountryCode: Joi.string().optional(),
+        phoneNumber: Joi.string().optional(),
+        addressCountry: Joi.string().optional(),
+        addressCity: Joi.string().optional(),
+        addressArea: Joi.string().optional(),
+        addressZip: Joi.string().optional()
+      }).unknown(false)
+    },
     middlewares: [authGuard()]
   },
   async (req, res) => {
-    let user = await User.findById(req.user.id);
+    const updates = req.body;
+
+    const user = await User.findByIdAndUpdate(req.user.id, updates, {
+      new: true
+    });
+
+    if (!user) throw new NotFound();
+    return reply(res, user);
+  }
+);
+
+router.add(
+  {
+    path: "/update-password",
+    method: "PATCH",
+    summary: "Update Password",
+    desc: "Allows the currently authenticated user to update their password.",
+    schema: {
+      body: Joi.object({
+        currentPassword: Joi.string().required(),
+        newPassword: Joi.string().required()
+      })
+    },
+    middlewares: [authGuard()]
+  },
+  async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(req.user.id);
 
     if (!user) {
       throw new NotFound();
     }
 
-    return reply(res, user);
+    const isPasswordCorrect = await comparePassword(
+      currentPassword,
+      user.passwordHash || ""
+    );
+
+    if (!isPasswordCorrect) {
+      throw new ApplicationError(
+        "Current password is incorrect",
+        StatusCodes.UNAUTHORIZED,
+        "invalid_password"
+      );
+    }
+
+    const newHash = await hashPassword(newPassword);
+
+    user.passwordHash = newHash;
+    await user.save();
+
+    return reply(res);
+  }
+);
+
+/* ==================== OAUTH ==================== */
+
+async function handleOAuthUser(
+  res: Response,
+  provider: string,
+  oauthEmail: string | undefined,
+  profileId: string,
+  userProfileData: any
+) {
+  if (!oauthEmail) {
+    res.status(200).send("need email bad");
+    return;
+  }
+
+  let user = await User.findOne({
+    email: oauthEmail,
+    creationMethod: provider
+  });
+
+  let needsCreation = !Boolean(user);
+
+  if (needsCreation) {
+    const emailInUse = await User.exists({ email: oauthEmail });
+
+    if (emailInUse) {
+      res
+        .status(200)
+        .send("A different non-google account with this email already exists");
+      return;
+    }
+
+    const newUser = await new User({
+      email: oauthEmail,
+      passwordHash: "/",
+      role: "user",
+      isActive: true,
+      isVerified: true,
+      creationMethod: provider,
+      oauthProfileId: profileId,
+      // ....
+      ...userProfileData
+    }).save();
+
+    user = newUser;
+  }
+
+  let accessToken = await tokenService.genAccess(user!);
+
+  res.redirect(`${appEnv.CLIENT_URL}/auth/oauth-success/${accessToken}`);
+}
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: appEnv.GOOGLE_CLIENT_ID,
+      clientSecret: appEnv.GOOGLE_CLIENT_SECRET,
+      callbackURL: "/auth/google/callback"
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      done(null, profile);
+    }
+  )
+);
+
+// client redirects here, redirected to google screen
+router.add(
+  { path: "/google", method: "GET" },
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// google redirects back here
+router.add(
+  {
+    path: "/google/callback",
+    method: "GET",
+    middlewares: [passport.authenticate("google", { session: false })]
+  },
+  async (req: any, res) => {
+    // from above done(null, profile)
+    const profile = req.user;
+    const oauthEmail = profile.emails?.[0].value;
+
+    handleOAuthUser(res, "google", oauthEmail, profile.id, {
+      fullName: profile.displayName
+    });
   }
 );
