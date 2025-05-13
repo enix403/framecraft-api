@@ -42,6 +42,11 @@ COPY blueprint/requirements.txt ./
 RUN --mount=type=cache,target=/root/.cache/pip \
   pip install -r requirements.txt
 
+# Currently a quickfix. opencv-python does not work, the headless
+# version does
+# TODO: Do something elegant and long term about it
+RUN pip uninstall -y opencv-python && pip install opencv-python-headless==4.5.1.48
+
 COPY blueprint/checkpoints ./checkpoints
 COPY blueprint/httpservice ./httpservice
 COPY blueprint/minimal ./minimal
