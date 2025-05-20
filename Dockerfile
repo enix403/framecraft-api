@@ -48,6 +48,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 RUN pip uninstall -y opencv-python && pip install opencv-python-headless==4.5.1.48
 
 COPY blueprint/checkpoints ./checkpoints
+COPY blueprint/plibrary ./plibrary
+COPY blueprint/pregen ./pregen
 COPY blueprint/httpservice ./httpservice
 COPY blueprint/minimal ./minimal
 

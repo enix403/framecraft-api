@@ -18,7 +18,7 @@ node -e "
 " > "$envfile"
 
 # Run the podman container and capture its exit code
-podman run --env-file "$envfile" -p 3001:80 --rm framecraft/api
+podman run --env-file "$envfile" -p 3001:80 --rm -it framecraft/api
 exit_code=$?
 
 # Exit with the same status as the podman run command
